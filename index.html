@@ -1,0 +1,242 @@
+<!doctype html>
+<html ng-app="cgstats">
+  <head>
+    <title>CG stats</title>
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <link rel="stylesheet" href="/css/bootstrap-theme.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <form ng-controller="form" class="form-horizontal">
+            <div class="form-group">
+              <label for="game" class="control-label col-xs-2">Game : </label>
+              <div class="col-xs-6">
+                <select ng-model="game" required>
+                  <option value="">-- Select a game --</option>
+                  <option value="82">Multi - Back to the Code</option>
+                  <option value="59">Multi - The great escape</option>
+                  <option value="55">Multi - Platinum rift 2</option>
+                  <option value="49">Multi - Platinum rift</option>
+                  <option value="42">Multi - Poker chip race</option>
+                  <option value="30">Multi - Game of drones</option>
+                  <option value="26">Multi - Tron battle</option>
+                  <option value="smash-the-code">Challenge - Smash the Code</option>
+                  <option value="coders-strike-back">Challenge - Coders Strike Back</option>
+                  <option value="sf2442">Challenge - San Francisco 2442</option>
+                  <option value="back-to-the-code">Challenge - Back to the code</option>
+                  <option value="the-great-escape">Challenge - The great escape</option>
+                  <option value="platinum-rift-2">Challenge - Platinum rift 2</option>
+                  <option value="platinum-rift">Challenge - Platinum rift</option>
+                  <option value="winamax">Challenge - Poker chip race</option>
+                  <option value="parrot">Challenge - Game of drones</option>
+                  <option value="20">Challenge - Tron battle</option>
+                  <option value="thor-codesize">Optimisation - Le pouvoir de thor</option>
+                  <option value="paranoid-codesize">Optimisation - Les clones</option>
+                  <option value="temperatures-codesize">Optimisation - Temp&eacute;ratures</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="player" class="control-label col-xs-2">Player : </label>
+              <div class="col-xs-6">
+                <input type="text" ng-model="player" required />
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary col-xs-offset-2" ng-click="search()">Search</button>
+
+            <div ng-class="{ cloack : !loading }">
+              Loading ...
+            </div>
+            <div ng-class="{ cloack : !fail }">
+              <p class="bg-danger">Error, sorry. Try to ask Magus</p>
+            </div> 
+            <div ng-class="{ cloack : !date }">
+              <p>Search done at {{ date }}</p>
+            </div> 
+          </form>
+        </div>
+      </div>
+
+      <textarea></textarea>
+
+      <div class="row" ng-controller="list">
+        <div class="col-xs-12" ng-if="player && mode=='multi'">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Pseudo</th>
+                <th>Rank</th>
+                <th>Score</th>
+                <th>Language</th>
+                <th>Progress</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ player.pseudo }}</td>
+                <td>{{ player.rank }}</td>
+                <td>{{ player.score }}</td>
+                <td>{{ player.programmingLanguage }}</td>
+                <td>{{ player.percentage }}%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>2 players ({{ stats['2'].total }} games)</th>
+                <th>Count</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Victory</td>
+                <td>{{ stats['2']['1'].count }}</td>
+                <td>{{ stats['2']['1'].percentage }}%</td>
+              </tr>
+              <tr>
+                <td>Defeat</td>
+                <td>{{ stats['2']['2'].count }}</td>
+                <td>{{ stats['2']['2'].percentage }}%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-bordered" ng-if="stats['3'].total > 0">
+            <thead>
+              <tr>
+                <th>3 players ({{ stats['3'].total }} games)</th>
+                <th>Count</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Victory</td>
+                <td>{{ stats['3']['1'].count }}</td>
+                <td>{{ stats['3']['1'].percentage }}%</td>
+              </tr>
+              <tr>
+                <td>2<sup>nd</sup> position</td>
+                <td>{{ stats['3']['2'].count }}</td>
+                <td>{{ stats['3']['2'].percentage }}%</td>
+              </tr>
+              <tr>
+                <td>Defeat</td>
+                <td>{{ stats['3']['3'].count }}</td>
+                <td>{{ stats['3']['3'].percentage }}%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-bordered" ng-if="stats['4'].total > 0">
+            <thead>
+              <tr>
+                <th>4 players ({{ stats['4'].total }} games)</th>
+                <th>Count</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Victory</td>
+                <td>{{ stats['4']['1'].count }}</td>
+                <td>{{ stats['4']['1'].percentage }}%</td>
+              </tr>
+              <tr>
+                <td>2<sup>nd</sup> position</td>
+                <td>{{ stats['4']['2'].count }}</td>
+                <td>{{ stats['4']['2'].percentage }}%</td>
+              </tr>
+              <tr>
+                <td>3<sup>rd</sup> position</td>
+                <td>{{ stats['4']['3'].count }}</td>
+                <td>{{ stats['4']['3'].percentage }}%</td>
+              </tr>
+              <tr>
+                <td>Defeat</td>
+                <td>{{ stats['4']['4'].count }}</td>
+                <td>{{ stats['4']['4'].percentage }}%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-bordered" ng-repeat="line in details">
+            <thead>
+              <tr>
+                <th>{{ line.name }} ({{ line.total }} games)</th>
+                <th>Count</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Victory</td>
+                <td>{{ line['1'].count }}</td>
+                <td>{{ line['1'].percentage }}%</td>
+              </tr>
+              <tr>
+                <td ng-if="line.players > 2">2<sup>nd</sup> position</td>
+                <td ng-if="line.players == 2">Defeat</td>
+                <td>{{ line['2'].count }}</td>
+                <td>{{ line['2'].percentage }}%</td>
+              </tr>
+              <tr ng-if="line.players > 2">
+                <td ng-if="line.players == 4">3<sup>rd</sup> position</td>
+                <td ng-if="line.players == 3">Defeat</td>
+                <td>{{ line['3'].count }}</td>
+                <td>{{ line['3'].percentage }}%</td>
+              </tr>
+              <tr ng-if="line.players > 3">
+                <td>Defeat</td>
+                <td>{{ line['4'].count }}</td>
+                <td>{{ line['4'].percentage }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col-xs-12" ng-if="player && mode=='optim'">
+          <p class="lead">Total score : {{ score }}</p>
+
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>
+                  Language
+                </th>
+                <th>
+                  Rank
+                </th>
+                <th>
+                  Total
+                </th>
+                <th>
+                  Points
+                </th>
+              </tr>
+            </thread>
+            <tr ng-repeat="line in stats" ng-class="{ success : $index < 5 }">
+              <td>{{ line.language }}</td>
+              <td>{{ line.rank }}</td>
+              <td>{{ line.total }}</td>
+              <td>{{ line.points }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="/js/angular.js"></script>
+    <script type="text/javascript" src="/js/moment.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+  </body>
+</html>

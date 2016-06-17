@@ -1,0 +1,15 @@
+.container {
+  margin-top: 20px;
+}
+
+form {
+  margin-bottom: 50px;
+}
+
+.cloack {
+  visibility: hidden;
+}
+
+textarea {
+	margin-bottom: 20px;
+}
