@@ -170,36 +170,21 @@
             </tbody>
           </table>
 
-          <table class="table table-bordered" ng-repeat="line in details">
+          <table class="table table-bordered">
             <thead>
               <tr>
-                <th>{{ line.name }} ({{ line.total }} games)</th>
-                <th>Count</th>
-                <th>Percentage</th>
+                <th width="10%">Rank</th>
+                <th width="50%">Nick</th>
+                <th width="10%">Score</th>
+                <th width="30%">Winrate</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Victory</td>
-                <td>{{ line['1'].count }}</td>
-                <td>{{ line['1'].percentage }}%</td>
-              </tr>
-              <tr>
-                <td ng-if="line.players > 2">2<sup>nd</sup> position</td>
-                <td ng-if="line.players == 2">Defeat</td>
-                <td>{{ line['2'].count }}</td>
-                <td>{{ line['2'].percentage }}%</td>
-              </tr>
-              <tr ng-if="line.players > 2">
-                <td ng-if="line.players == 4">3<sup>rd</sup> position</td>
-                <td ng-if="line.players == 3">Defeat</td>
-                <td>{{ line['3'].count }}</td>
-                <td>{{ line['3'].percentage }}%</td>
-              </tr>
-              <tr ng-if="line.players > 3">
-                <td>Defeat</td>
-                <td>{{ line['4'].count }}</td>
-                <td>{{ line['4'].percentage }}%</td>
+              <tr ng-repeat="line in details" ng-class="{ highlight : line.highlight }">
+                <td>{{ line.rank }}</td>
+                <td>{{ line.pseudo }}</td>
+                <td>{{ line.score }}</td>
+                <td>{{ line.winrate }}</td>
               </tr>
             </tbody>
           </table>
