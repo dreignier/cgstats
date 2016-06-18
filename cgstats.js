@@ -2,7 +2,7 @@
 // https://www.codingame.com/services/gamesPlayersRankingRemoteService/findAllByTestSessionHandle
 // POST : ["1068959f5d9ae270f02e0d29e8b27ea9e18c0f"] Id dans le json du leaderboard
 
-// Classement challenge : 
+// Classement challenge :
 // https://www.codingame.com/services/LeaderboardsRemoteService/getChallengeLeaderboard
 // ["59","1724dffd64c8c26c9fa9a189691387b5760508","global"]
 //   id en dur
@@ -17,10 +17,10 @@ var express = require('express'),
     request = require('request'),
     _ = require('underscore');
 
-// *****************************
+// ****************************
 
-var games = ["59","55","49","42","30","26","back-to-the-code","the-great-escape","platinum-rift-2","platinum-rift","winamax","parrot","20","82", "coders-strike-back", "sf2442", "smash-the-code"];
-var optimizations = ["thor-codesize","paranoid-codesize", "temperatures-codesize"];
+var games = ["multi-coders-strike-back", "multi-back-to-the-code", "multi-great-escape", "multi-platinum-rift2", "multi-platinum-rift", "multi-poker-chip-race", "multi-game-of-drone", "multi-tron-battle", "smash-the-code", "coders-strike-back", "sf2442", "back-to-the-code", "the-great-escape", "platinum-rift-2", "platinum-rift", "winamax", "parrot", "20"];
+var optimizations = ["thor-codesize", "paranoid-codesize", "temperatures-codesize"];
 
 // *****************************
 
@@ -36,14 +36,17 @@ app.get('/search*', function(req, res) {
     return;
   }
 
-
   if (games.indexOf(game) != -1) {
+    var api = game.substring(0, 6) == 'multi-' ? 'getPuzzleLeaderboard' : 'getChallengeLeaderboard';
+
+    game = game.replace('multi-', '');
+
     // Get the game leaderboard
     request({
-      url : 'https://www.codingame.com/services/LeaderboardsRemoteService/getPuzzleLeaderBoard',
+      url : 'https://www.codingame.com/services/LeaderboardsRemoteService/' + api,
       method : 'POST',
       json : true,
-      body : [game, "", "global"]
+      body : [game + '', "", "global"]
     }, function(error, response, body) {
 
       if (error) {
@@ -167,7 +170,7 @@ function compileStats(data, userId, users) {
         stats.details[key] = [];
       }
 
-      stats.details[key][position] = (stats.details[key][position] || 0) + 1;      
+      stats.details[key][position] = (stats.details[key][position] || 0) + 1;
     }
   });
 
