@@ -39,6 +39,9 @@ angular.module('cgstats', [])
 })
 
 .controller('list', function($scope, data) {
+  $scope.sortType = 'rank';
+  $scope.sortReverse = false;
+  
   data.onChange(function(response) {
     $scope.player = response.player;
     $scope.stats = response.stats.stats || response.stats;

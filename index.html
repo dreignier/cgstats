@@ -173,18 +173,54 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th width="10%">Rank</th>
-                <th width="50%">Nick</th>
-                <th width="10%">Score</th>
-                <th width="30%">Winrate</th>
+                <th width="10%" ng-click="sortType = 'rank'; sortReverse = !sortReverse">
+                  Rank
+                  <span ng-show="sortType == 'rank' && sortReverse" class="arrow-down"></span>
+                  <span ng-show="sortType == 'rank' && !sortReverse" class="arrow-up"></span>
+                </th>
+                <th width="40%">
+                  Nick
+                </th>
+                <th width="10%"  ng-click="sortType = 'score'; sortReverse = !sortReverse">
+                  Score
+                  <span ng-show="sortType == 'score' && sortReverse" class="arrow-down"></span>
+                  <span ng-show="sortType == 'score' && !sortReverse" class="arrow-up"></span>
+                </th>
+                <th width="15%"  ng-click="sortType = 'winrate'; sortReverse = !sortReverse">
+                  Winrate
+                  <span ng-show="sortType == 'winrate' && sortReverse" class="arrow-down"></span>
+                  <span ng-show="sortType == 'winrate' && !sortReverse" class="arrow-up"></span>
+                </th>
+                <th width="15%">
+                  W / L
+                </th>
+                <th width="10%"  ng-click="sortType = 'total'; sortReverse = !sortReverse">
+                  Total
+                  <span ng-show="sortType == 'total' && sortReverse" class="arrow-down"></span>
+                  <span ng-show="sortType == 'total' && !sortReverse" class="arrow-up"></span>
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="line in details" ng-class="{ highlight : line.highlight }">
-                <td>{{ line.rank }}</td>
-                <td>{{ line.pseudo }}</td>
-                <td>{{ line.score }}</td>
-                <td>{{ line.winrate }}</td>
+              <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight }">
+                <td>
+                  {{ line.rank }}
+                </td>
+                <td>
+                  {{ line.pseudo }}
+                </td>
+                <td>
+                  {{ line.score }}
+                </td>
+                <td>
+                  <span ng-show="line.winrate != -1">{{ line.winrate }} %</span>
+                </td>
+                <td>
+                  <span ng-show="line.winrate != -1">{{ line.beaten }} / {{ line.total - line.beaten }}</span>
+                </td>
+                <td>
+                  {{ line.total }}
+                </td>
               </tr>
             </tbody>
           </table>
