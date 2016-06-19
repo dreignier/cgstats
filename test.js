@@ -6,6 +6,10 @@ var app = express();
 
 app.use(express.static('.'));
 
+app.get('/app*', function(req, res) {
+  res.sendFile(__dirname + '/index.html');
+});
+
 app.get('/proxy*', function(req, res) {
   var proxied = 'http://localhost:9888' + req.url.replace('/proxy', '');
 

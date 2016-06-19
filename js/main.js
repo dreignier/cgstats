@@ -14,7 +14,8 @@ angular.module('cgstats', ['ui.router'])
 
   .state('app.stats', {
     url: '/{game}/{player}',
-    templateUrl: '/templates/stats.html'
+    templateUrl: '/templates/stats.html',
+    controller: 'list'
   });
 })
 
@@ -60,6 +61,7 @@ angular.module('cgstats', ['ui.router'])
 })
 
 .controller('list', function($scope, data) {
+  console.log('mais prout ?');
   $scope.sortType = 'rank';
   $scope.sortReverse = false;
   

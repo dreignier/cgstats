@@ -1,4 +1,4 @@
-<div class="row" ng-controller="list">
+<div class="row">
   <div class="col-xs-12" ng-if="player && mode=='multi'">
     <table class="table table-bordered">
       <thead>
@@ -134,7 +134,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, danger : !line.highlight && line.winrate <= 40, warning : !line.highlight && line.winrate <= 50 }">
+        <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, danger : !line.highlight && line.winrate <= 40 && line.total > 0, warning : !line.highlight && line.winrate <= 50 && line.total > 0 }">
           <td>
             {{ line.rank }}
           </td>
@@ -145,13 +145,13 @@
             {{ line.score }}
           </td>
           <td>
-            <span ng-show="line.winrate != -1">{{ line.winrate }} %</span>
+            <span ng-show="line.total > 0">{{ line.winrate }} %</span>
           </td>
           <td>
-            <span ng-show="line.winrate != -1">{{ line.beaten }} / {{ line.total - line.beaten }}</span>
+            <span ng-show="line.total > 0">{{ line.beaten }} / {{ line.total - line.beaten }}</span>
           </td>
           <td>
-            {{ line.total }}
+            <span ng-show="line.total > 0">{{ line.total }}</span>
           </td>
         </tr>
       </tbody>
