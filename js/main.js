@@ -36,6 +36,8 @@ angular.module('cgstats', ['ui.router'])
       $state.go('app.stats', {
         game: $scope.game,
         player: $scope.player
+      }, {
+        reload: true
       });
     }
   };
