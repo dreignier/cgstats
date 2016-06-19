@@ -2,12 +2,13 @@
 <html ng-app="cgstats">
   <head>
     <title>CG stats</title>
-    <link rel="stylesheet" href="/css/bootstrap.css" />
-    <link rel="stylesheet" href="/css/bootstrap-theme.css" />
-    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/bootstrap.css?v=1" />
+    <link rel="stylesheet" href="/css/bootstrap-theme.css?v=1" />
+    <link rel="stylesheet" href="/css/main.css?v=1" />
   </head>
 
   <body>
+    <h1>CG stats</h1>
     <div class="container">
       <div class="row">
         <div class="col-xs-12">
@@ -64,7 +65,8 @@
         </div>
       </div>
 
-      <textarea></textarea>
+      <label for="notes">Notes:</label>
+      <textarea id="notes"></textarea>
 
       <div class="row" ng-controller="list">
         <div class="col-xs-12" ng-if="player && mode=='multi'">
@@ -257,8 +259,8 @@
       </div>
     </div>
 
-    <script type="text/javascript" src="/js/angular.js"></script>
-    <script type="text/javascript" src="/js/moment.js"></script>
-    <script type="text/javascript" src="/js/main.js"></script>
+    <script type="text/javascript" src="/js/angular.js?v=1"></script>
+    <script type="text/javascript" src="/js/moment.js?v=1"></script>
+    <script type="text/javascript" src="/js/main.js?v=1"></script>
   </body>
 </html>
