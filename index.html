@@ -207,7 +207,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, danger : !line.highlight && line.winrate <= 40, warning : !line.highlight && line.winrate <= 50 }">
+              <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, danger : !line.highlight && line.winrate <= 40 && line.winrate > -1, warning : !line.highlight && line.winrate <= 50 && line.winrate > -1 }">
                 <td>
                   {{ line.rank }}
                 </td>
