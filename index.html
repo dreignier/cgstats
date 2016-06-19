@@ -8,7 +8,9 @@
   </head>
 
   <body ng-cloak>
-    <h1>CG stats</h1>
+    <div class="jumbotron">
+      <h1>CG stats</h1>
+    </div>
     <div class="container">
       <div class="row">
         <div class="col-xs-12">
@@ -73,7 +75,7 @@
         <div class="col-xs-12" ng-if="player && mode=='multi'">
           <table class="table table-bordered">
             <thead>
-              <tr>
+              <tr class="info">
                 <th>Pseudo</th>
                 <th>Rank</th>
                 <th>Score</th>
@@ -94,7 +96,7 @@
 
           <table class="table table-bordered">
             <thead>
-              <tr>
+              <tr class="info">
                 <th>2 players ({{ stats['2'].total }} games)</th>
                 <th>Count</th>
                 <th>Percentage</th>
@@ -116,7 +118,7 @@
 
           <table class="table table-bordered" ng-if="stats['3'].total > 0">
             <thead>
-              <tr>
+              <tr class="info">
                 <th>3 players ({{ stats['3'].total }} games)</th>
                 <th>Count</th>
                 <th>Percentage</th>
@@ -143,7 +145,7 @@
 
           <table class="table table-bordered" ng-if="stats['4'].total > 0">
             <thead>
-              <tr>
+              <tr class="info">
                 <th>4 players ({{ stats['4'].total }} games)</th>
                 <th>Count</th>
                 <th>Percentage</th>
@@ -175,7 +177,7 @@
 
           <table class="table table-bordered">
             <thead>
-              <tr>
+              <tr class="info">
                 <th width="10%" ng-click="sortType = 'rank'; sortReverse = !sortReverse">
                   Rank
                   <span ng-show="sortType == 'rank' && sortReverse" class="arrow-down"></span>
@@ -205,7 +207,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight }">
+              <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, danger : !line.highlight && line.winrate <= 40, warning : !line.highlight && line.winrate <= 50 }">
                 <td>
                   {{ line.rank }}
                 </td>
@@ -234,7 +236,7 @@
 
           <table class="table table-bordered table-striped">
             <thead>
-              <tr>
+              <tr class="info">
                 <th>
                   Language
                 </th>
@@ -248,7 +250,7 @@
                   Points
                 </th>
               </tr>
-            </thread>
+            </thead>
             <tr ng-repeat="line in stats" ng-class="{ success : $index < 5 }">
               <td>{{ line.language }}</td>
               <td>{{ line.rank }}</td>
