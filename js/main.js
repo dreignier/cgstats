@@ -1,5 +1,4 @@
-// var url = 'http://cgstats.proxy.magusgeek.com';
-var url = '/proxy';
+var url = location.port === '8888' ? '/proxy' : 'http://cgstats.proxy.magusgeek.com';
 
 angular.module('cgstats', [])
 
@@ -24,7 +23,7 @@ angular.module('cgstats', [])
   $scope.search = function() {
     if ($scope.game.trim() && $scope.player.trim()) {
       $scope.loading = true;
-      
+
       $http.get(url + '/search?game=' + encodeURIComponent($scope.game.trim()) + '&player=' + encodeURIComponent($scope.player.trim()))
 
       .then(function (response) {
