@@ -144,7 +144,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, danger : !line.highlight && line.winrate <= 40 && line.total > 0, warning : !line.highlight && line.winrate <= 50 && line.total > 0 }">
+        <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, danger : !line.highlight && line.winrate <= 40 && line.total > 0, warning : !line.highlight && line.winrate <= 50 && line.total > 0, faded: line.total < 5 }">
           <td>
             {{ line.rank }}
           </td>

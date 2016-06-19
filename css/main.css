@@ -63,3 +63,7 @@ textarea {
   animation: rotating 1s ease-in-out infinite;
   font-size: 30px;
 }
+
+.faded {
+  opacity: 0.5;
+}

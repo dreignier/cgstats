@@ -155,7 +155,7 @@ function compileStats(data, userId, users) {
   for (var uId in users) {
     users[uId].beaten = 0;
     users[uId].total = 0;
-    users[uId].winrate = -1;
+    users[uId].winrate = 0;
   }
   
   // Global winrate stats
@@ -171,9 +171,7 @@ function compileStats(data, userId, users) {
         
         if (result.players[i].userId == userId) {
           found = true;
-        }
-        
-        if (users.hasOwnProperty(result.players[i].userId)) {
+        } else if (users.hasOwnProperty(result.players[i].userId)) {
           users[result.players[i].userId].total++;
           if (found) {
             users[result.players[i].userId].beaten++;
