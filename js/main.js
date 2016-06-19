@@ -39,10 +39,13 @@ angular.module('cgstats', [])
 })
 
 .controller('list', function($scope, data) {
+  $scope.sortType = 'rank';
+  $scope.sortReverse = false;
+  
   data.onChange(function(response) {
     $scope.player = response.player;
     $scope.stats = response.stats.stats || response.stats;
-    $scope.details = response.stats.details;
+    $scope.details = response.stats.users;
     $scope.mode = response.mode;
 
     if ($scope.mode == 'optim') {

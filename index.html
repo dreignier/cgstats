@@ -170,36 +170,57 @@
             </tbody>
           </table>
 
-          <table class="table table-bordered" ng-repeat="line in details">
+          <table class="table table-bordered">
             <thead>
               <tr>
-                <th>{{ line.name }} ({{ line.total }} games)</th>
-                <th>Count</th>
-                <th>Percentage</th>
+                <th width="10%" ng-click="sortType = 'rank'; sortReverse = !sortReverse">
+                  Rank
+                  <span ng-show="sortType == 'rank' && sortReverse" class="arrow-down"></span>
+                  <span ng-show="sortType == 'rank' && !sortReverse" class="arrow-up"></span>
+                </th>
+                <th width="40%">
+                  Nick
+                </th>
+                <th width="10%"  ng-click="sortType = 'score'; sortReverse = !sortReverse">
+                  Score
+                  <span ng-show="sortType == 'score' && sortReverse" class="arrow-down"></span>
+                  <span ng-show="sortType == 'score' && !sortReverse" class="arrow-up"></span>
+                </th>
+                <th width="15%"  ng-click="sortType = 'winrate'; sortReverse = !sortReverse">
+                  Winrate
+                  <span ng-show="sortType == 'winrate' && sortReverse" class="arrow-down"></span>
+                  <span ng-show="sortType == 'winrate' && !sortReverse" class="arrow-up"></span>
+                </th>
+                <th width="15%">
+                  W / L
+                </th>
+                <th width="10%"  ng-click="sortType = 'total'; sortReverse = !sortReverse">
+                  Total
+                  <span ng-show="sortType == 'total' && sortReverse" class="arrow-down"></span>
+                  <span ng-show="sortType == 'total' && !sortReverse" class="arrow-up"></span>
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Victory</td>
-                <td>{{ line['1'].count }}</td>
-                <td>{{ line['1'].percentage }}%</td>
-              </tr>
-              <tr>
-                <td ng-if="line.players > 2">2<sup>nd</sup> position</td>
-                <td ng-if="line.players == 2">Defeat</td>
-                <td>{{ line['2'].count }}</td>
-                <td>{{ line['2'].percentage }}%</td>
-              </tr>
-              <tr ng-if="line.players > 2">
-                <td ng-if="line.players == 4">3<sup>rd</sup> position</td>
-                <td ng-if="line.players == 3">Defeat</td>
-                <td>{{ line['3'].count }}</td>
-                <td>{{ line['3'].percentage }}%</td>
-              </tr>
-              <tr ng-if="line.players > 3">
-                <td>Defeat</td>
-                <td>{{ line['4'].count }}</td>
-                <td>{{ line['4'].percentage }}%</td>
+              <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight }">
+                <td>
+                  {{ line.rank }}
+                </td>
+                <td>
+                  {{ line.pseudo }}
+                </td>
+                <td>
+                  {{ line.score }}
+                </td>
+                <td>
+                  <span ng-show="line.winrate != -1">{{ line.winrate }} %</span>
+                </td>
+                <td>
+                  <span ng-show="line.winrate != -1">{{ line.beaten }} / {{ line.total - line.beaten }}</span>
+                </td>
+                <td>
+                  {{ line.total }}
+                </td>
               </tr>
             </tbody>
           </table>
