@@ -1,3 +1,13 @@
+<div ng-class="{ cloak : !loading }">
+  <span class="glyphicon glyphicon-hourglass loading"></span>
+</div>
+<div ng-class="{ cloak : !fail }">
+  <p class="bg-danger">Error, sorry. Try to ask Magus</p>
+</div>
+<div ng-class="{ cloak : !date }">
+  <p>Search done at {{ date }}</p>
+</div>
+
 <div class="row">
   <div class="col-xs-12" ng-if="player && mode=='multi'">
     <table class="table table-bordered">
@@ -145,13 +155,13 @@
             {{ line.score }}
           </td>
           <td>
-            <span ng-show="line.total > 0">{{ line.winrate }} %</span>
+            <span ng-show="!line.highlight && line.total > 0">{{ line.winrate }} %</span>
           </td>
           <td>
-            <span ng-show="line.total > 0">{{ line.beaten }} / {{ line.total - line.beaten }}</span>
+            <span ng-show="!line.highlight && line.total > 0">{{ line.beaten }} / {{ line.total - line.beaten }}</span>
           </td>
           <td>
-            <span ng-show="line.total > 0">{{ line.total }}</span>
+            <span ng-show="!line.highlight && line.total > 0">{{ line.total }}</span>
           </td>
         </tr>
       </tbody>

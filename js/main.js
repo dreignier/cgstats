@@ -9,7 +9,8 @@ angular.module('cgstats', ['ui.router'])
   $stateProvider
 
   .state('app', {
-    url: '/app'
+    url: '/app',
+    template: '<ui-view></ui-view>'
   })
 
   .state('app.stats', {
@@ -19,62 +20,58 @@ angular.module('cgstats', ['ui.router'])
   });
 })
 
-.factory('data', function() {
-  var callback;
-
-  return {
-
-  };
-})
-
-.controller('form', function($scope, $http, $state, data) {
+.controller('form', function($scope, $state, $rootScope) {
   $scope.player = '';
   $scope.game = '';
 
+  $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams) {
+    if (toState.name == 'app.stats') {
+      $scope.player = toParams.player;
+      $scope.game = toParams.game;
+    }
+  });
+
   $scope.search = function() {
     if ($scope.game.trim() && $scope.player.trim()) {
-      $scope.loading = true;
-
-      $http.get(url + '/search?game=' + encodeURIComponent($scope.game.trim()) + '&player=' + encodeURIComponent($scope.player.trim()))
-
-      .then(function (response) {
-        data.data = response.data;
-        
-        $scope.fail = false;
-        $scope.date = moment().format('HH:mm:ss');
-
-        $state.go('app.stats', {
-          game: $scope.game,
-          player: $scope.player
-        });
-      })
-
-      .catch(function() {
-        $scope.fail = true;
-      })
-
-      .then(function() {
-        $scope.loading = false;
+      $state.go('app.stats', {
+        game: $scope.game,
+        player: $scope.player
       });
     }
   };
 })
 
-.controller('list', function($scope, data) {
-  console.log('mais prout ?');
-  $scope.sortType = 'rank';
-  $scope.sortReverse = false;
-  
-  $scope.player = data.data.player;
-  $scope.stats = data.data.stats.stats || data.data.stats;
-  $scope.details = data.data.stats.users;
-  $scope.mode = data.data.mode;
+.controller('list', function($scope, $http, $stateParams) {
+  $scope.loading = true;
 
-  if ($scope.mode == 'optim') {
-    $scope.score = 0;
+  $http.get(url + '/search?game=' + encodeURIComponent($stateParams.game.trim()) + '&player=' + encodeURIComponent($stateParams.player.trim()))
+
+  .then(function (response) {
+    $scope.fail = false;
+    $scope.date = moment().format('HH:mm:ss');
+
+    $scope.sortType = 'rank';
+    $scope.sortReverse = false;
     
-    for (var i = 0; i < 5 && i < $scope.stats.length; ++i) {
-      $scope.score += $scope.stats[i].points;
+    $scope.player = response.data.player;
+    $scope.stats = response.data.stats.stats || response.data.stats;
+    $scope.details = response.data.stats.users;
+    $scope.mode = response.data.mode;
+
+    if ($scope.mode == 'optim') {
+      $scope.score = 0;
+      
+      for (var i = 0; i < 5 && i < $scope.stats.length; ++i) {
+        $scope.score += $scope.stats[i].points;
+      }
     }
-  }
+  })
+
+  .catch(function() {
+    $scope.fail = true;
+  })
+
+  .then(function() {
+    $scope.loading = false;
+  });
 });

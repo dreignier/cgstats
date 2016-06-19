@@ -56,16 +56,6 @@
             </div>
 
             <button type="submit" class="btn btn-primary col-xs-offset-2" ng-click="search()">Search</button>
-
-            <div ng-class="{ cloak : !loading }">
-              <span class="glyphicon glyphicon-hourglass loading"></span>
-            </div>
-            <div ng-class="{ cloak : !fail }">
-              <p class="bg-danger">Error, sorry. Try to ask Magus</p>
-            </div>
-            <div ng-class="{ cloak : !date }">
-              <p>Search done at {{ date }}</p>
-            </div>
           </form>
         </div>
       </div>
@@ -73,7 +63,7 @@
       <label for="notes">Notes:</label>
       <textarea id="notes" class="form-control"></textarea>
 
-      <div ui-view></div>
+      <ui-view></ui-view>
     </div>
 
     <script type="text/javascript" src="/js/angular.js?v=3"></script>
