@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="/css/bootstrap.css?v=2" />
     <link rel="stylesheet" href="/css/bootstrap-theme.css?v=2" />
     <link rel="stylesheet" href="/css/main.css?v=2" />
+
+    <base href="/" />
   </head>
 
   <body ng-cloak>
@@ -71,199 +73,12 @@
       <label for="notes">Notes:</label>
       <textarea id="notes" class="form-control"></textarea>
 
-      <div class="row" ng-controller="list">
-        <div class="col-xs-12" ng-if="player && mode=='multi'">
-          <table class="table table-bordered">
-            <thead>
-              <tr class="info">
-                <th>Pseudo</th>
-                <th>Rank</th>
-                <th>Score</th>
-                <th>Language</th>
-                <th>Progress</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{ player.pseudo }}</td>
-                <td>{{ player.rank }}</td>
-                <td>{{ player.score }}</td>
-                <td>{{ player.programmingLanguage }}</td>
-                <td>{{ player.percentage }}%</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table class="table table-bordered">
-            <thead>
-              <tr class="info">
-                <th>2 players ({{ stats['2'].total }} games)</th>
-                <th>Count</th>
-                <th>Percentage</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Victory</td>
-                <td>{{ stats['2']['1'].count }}</td>
-                <td>{{ stats['2']['1'].percentage }}%</td>
-              </tr>
-              <tr>
-                <td>Defeat</td>
-                <td>{{ stats['2']['2'].count }}</td>
-                <td>{{ stats['2']['2'].percentage }}%</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table class="table table-bordered" ng-if="stats['3'].total > 0">
-            <thead>
-              <tr class="info">
-                <th>3 players ({{ stats['3'].total }} games)</th>
-                <th>Count</th>
-                <th>Percentage</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Victory</td>
-                <td>{{ stats['3']['1'].count }}</td>
-                <td>{{ stats['3']['1'].percentage }}%</td>
-              </tr>
-              <tr>
-                <td>2<sup>nd</sup> position</td>
-                <td>{{ stats['3']['2'].count }}</td>
-                <td>{{ stats['3']['2'].percentage }}%</td>
-              </tr>
-              <tr>
-                <td>Defeat</td>
-                <td>{{ stats['3']['3'].count }}</td>
-                <td>{{ stats['3']['3'].percentage }}%</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table class="table table-bordered" ng-if="stats['4'].total > 0">
-            <thead>
-              <tr class="info">
-                <th>4 players ({{ stats['4'].total }} games)</th>
-                <th>Count</th>
-                <th>Percentage</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Victory</td>
-                <td>{{ stats['4']['1'].count }}</td>
-                <td>{{ stats['4']['1'].percentage }}%</td>
-              </tr>
-              <tr>
-                <td>2<sup>nd</sup> position</td>
-                <td>{{ stats['4']['2'].count }}</td>
-                <td>{{ stats['4']['2'].percentage }}%</td>
-              </tr>
-              <tr>
-                <td>3<sup>rd</sup> position</td>
-                <td>{{ stats['4']['3'].count }}</td>
-                <td>{{ stats['4']['3'].percentage }}%</td>
-              </tr>
-              <tr>
-                <td>Defeat</td>
-                <td>{{ stats['4']['4'].count }}</td>
-                <td>{{ stats['4']['4'].percentage }}%</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table class="table table-bordered">
-            <thead>
-              <tr class="info">
-                <th width="10%" ng-click="sortType = 'rank'; sortReverse = !sortReverse">
-                  Rank
-                  <span ng-show="sortType == 'rank' && sortReverse" class="arrow-down"></span>
-                  <span ng-show="sortType == 'rank' && !sortReverse" class="arrow-up"></span>
-                </th>
-                <th width="40%">
-                  Nick
-                </th>
-                <th width="10%"  ng-click="sortType = 'score'; sortReverse = !sortReverse">
-                  Score
-                  <span ng-show="sortType == 'score' && sortReverse" class="arrow-down"></span>
-                  <span ng-show="sortType == 'score' && !sortReverse" class="arrow-up"></span>
-                </th>
-                <th width="15%"  ng-click="sortType = 'winrate'; sortReverse = !sortReverse">
-                  Winrate
-                  <span ng-show="sortType == 'winrate' && sortReverse" class="arrow-down"></span>
-                  <span ng-show="sortType == 'winrate' && !sortReverse" class="arrow-up"></span>
-                </th>
-                <th width="15%">
-                  W / L
-                </th>
-                <th width="10%"  ng-click="sortType = 'total'; sortReverse = !sortReverse">
-                  Total
-                  <span ng-show="sortType == 'total' && sortReverse" class="arrow-down"></span>
-                  <span ng-show="sortType == 'total' && !sortReverse" class="arrow-up"></span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, danger : !line.highlight && line.winrate <= 40, warning : !line.highlight && line.winrate <= 50 }">
-                <td>
-                  {{ line.rank }}
-                </td>
-                <td>
-                  {{ line.pseudo }}
-                </td>
-                <td>
-                  {{ line.score }}
-                </td>
-                <td>
-                  <span ng-show="line.winrate != -1">{{ line.winrate }} %</span>
-                </td>
-                <td>
-                  <span ng-show="line.winrate != -1">{{ line.beaten }} / {{ line.total - line.beaten }}</span>
-                </td>
-                <td>
-                  {{ line.total }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="col-xs-12" ng-if="player && mode=='optim'">
-          <p class="lead">Total score : {{ score }}</p>
-
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr class="info">
-                <th>
-                  Language
-                </th>
-                <th>
-                  Rank
-                </th>
-                <th>
-                  Total
-                </th>
-                <th>
-                  Points
-                </th>
-              </tr>
-            </thead>
-            <tr ng-repeat="line in stats" ng-class="{ success : $index < 5 }">
-              <td>{{ line.language }}</td>
-              <td>{{ line.rank }}</td>
-              <td>{{ line.total }}</td>
-              <td>{{ line.points }}</td>
-            </tr>
-          </table>
-        </div>
-      </div>
+      <div ui-view></div>
     </div>
-    
-    <script type="text/javascript" src="/js/angular.js?v=2"></script>
-    <script type="text/javascript" src="/js/moment.js?v=2"></script>
-    <script type="text/javascript" src="/js/main.js?v=2"></script>
+
+    <script type="text/javascript" src="/js/angular.js?v=3"></script>
+    <script type="text/javascript" src="/js/angular-ui-router.js?v=3"></script>
+    <script type="text/javascript" src="/js/moment.js?v=3"></script>
+    <script type="text/javascript" src="/js/main.js?v=3"></script>
   </body>
 </html>
