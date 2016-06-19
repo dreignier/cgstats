@@ -153,6 +153,8 @@
           </td>
           <td>
             {{ line.score }}
+            <span ng-show="line.progress == 'INCREASE'" class="arrow-green"></span>
+            <span ng-show="line.progress == 'DECREASE'" class="arrow-red"></span>
           </td>
           <td>
             <span ng-show="!line.highlight && line.total > 0">{{ line.winrate }} %</span>
