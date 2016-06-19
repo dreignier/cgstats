@@ -22,16 +22,22 @@ angular.module('cgstats', [])
   $scope.game = '';
 
   $scope.search = function() {
-    $scope.loading = true;
-
     if ($scope.game.trim() && $scope.player.trim()) {
-      $http.get(url + '/search?game=' + encodeURIComponent($scope.game.trim()) + '&player=' + encodeURIComponent($scope.player.trim())).then(function (response) {
+      $scope.loading = true;
+      
+      $http.get(url + '/search?game=' + encodeURIComponent($scope.game.trim()) + '&player=' + encodeURIComponent($scope.player.trim()))
+
+      .then(function (response) {
         data.set(response.data);
         $scope.fail = false;
         $scope.date = moment().format('HH:mm:ss');
-      }, function(response) {
+      })
+
+      .catch(function() {
         $scope.fail = true;
-      }).then(function() {
+      })
+
+      .then(function() {
         $scope.loading = false;
       });
     }
