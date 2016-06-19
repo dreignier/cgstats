@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/main.css?v=1" />
   </head>
 
-  <body>
+  <body ng-cloak>
     <h1>CG stats</h1>
     <div class="container">
       <div class="row">
@@ -16,7 +16,7 @@
             <div class="form-group">
               <label for="game" class="control-label col-xs-2">Game :</label>
               <div class="col-xs-6">
-                <select ng-model="game" required>
+                <select class="form-control" ng-model="game" required>
                   <option value="">-- Select a game --</option>
                   <option value="multi-smash-the-code">Multi - Smash The Code</option>
                   <option value="multi-coders-strike-back">Multi - Coders Strike Back</option>
@@ -47,19 +47,19 @@
             <div class="form-group">
               <label for="player" class="control-label col-xs-2">Player : </label>
               <div class="col-xs-6">
-                <input type="text" ng-model="player" required />
+                <input class="form-control" type="text" ng-model="player" required />
               </div>
             </div>
 
             <button type="submit" class="btn btn-primary col-xs-offset-2" ng-click="search()">Search</button>
 
-            <div ng-class="{ cloack : !loading }">
-              Loading ...
+            <div ng-class="{ cloak : !loading }">
+              <span class="glyphicon glyphicon-hourglass loading"></span>
             </div>
-            <div ng-class="{ cloack : !fail }">
+            <div ng-class="{ cloak : !fail }">
               <p class="bg-danger">Error, sorry. Try to ask Magus</p>
             </div>
-            <div ng-class="{ cloack : !date }">
+            <div ng-class="{ cloak : !date }">
               <p>Search done at {{ date }}</p>
             </div>
           </form>
@@ -67,7 +67,7 @@
       </div>
 
       <label for="notes">Notes:</label>
-      <textarea id="notes"></textarea>
+      <textarea id="notes" class="form-control"></textarea>
 
       <div class="row" ng-controller="list">
         <div class="col-xs-12" ng-if="player && mode=='multi'">

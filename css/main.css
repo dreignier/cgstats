@@ -1,3 +1,7 @@
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 .container {
   margin-top: 20px;
 }
@@ -6,7 +10,7 @@ form {
   margin-bottom: 50px;
 }
 
-.cloack {
+.cloak {
   visibility: hidden;
 }
 
@@ -40,4 +44,18 @@ textarea {
 
 h1 {
   padding-left: 50px;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  animation: rotating 1s ease-in-out infinite;
+  font-size: 30px;
 }
