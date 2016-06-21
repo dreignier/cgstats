@@ -56,7 +56,7 @@ app.get('/search*', function(req, res) {
       }
 
       if (!body.success) {
-        console.error('No success in body', body);
+        console.error('No success in body 1', body);
         res.status(500).end();
         return;
       }
@@ -100,8 +100,9 @@ app.get('/search*', function(req, res) {
           }
 
           if (!body.success) {
-            console.error('No success in body', body);
+            console.error('No success in body 2', body);
             res.status(500).end();
+            return;
           }
 
           res.type('json').set({
