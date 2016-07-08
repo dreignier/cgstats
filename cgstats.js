@@ -55,7 +55,7 @@ app.get('/search*', function(req, res) {
         return;
       }
 
-      if (!body.success) {
+      if (!body || !body.success) {
         console.error('No success in body 1', body);
         res.status(500).end();
         return;
@@ -99,7 +99,7 @@ app.get('/search*', function(req, res) {
             return;
           }
 
-          if (!body.success) {
+          if (!body || !body.success) {
             console.error('No success in body 2', body);
             res.status(500).end();
             return;
@@ -127,7 +127,7 @@ app.get('/search*', function(req, res) {
         return;
       }
 
-      if (!body.success) {
+      if (!body || !body.success) {
         console.error('No success in body', body);
         res.status(500).end();
       }
