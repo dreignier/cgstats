@@ -154,6 +154,8 @@ function getKey(players) {
 function compileStats(data, userId, users) {
   var stats = [[], [], []];
   for (var uId in users) {
+    users[uId].draw = 0;
+    users[uId].lose = 0;
     users[uId].beaten = 0;
     users[uId].total = 0;
     users[uId].winrate = 0;
@@ -162,25 +164,38 @@ function compileStats(data, userId, users) {
   // Global winrate stats
   data.lastBattles.forEach(function(result) {
     if (result.done && result.players.length >= 2) {
-      var position;
-      var found = false;
+      if (result.players.length === 2 && result.players[0].position === result.players[1].position) {
+        // It's a draw in a 1v1 game
+        var hisId = result.players[0].userId === userId ? result.players[1].userId : result.players[0].userId;
 
-      for (var i = 0; i < result.players.length; ++i) {
-        if (result.players[i].userId == userId) {
-          position = result.players[i].position;
+        if (users[hisId]) {
+          users[hisId].total++;
+          users[hisId].draw++;
         }
-        
-        if (result.players[i].userId == userId) {
-          found = true;
-        } else if (users.hasOwnProperty(result.players[i].userId)) {
-          users[result.players[i].userId].total++;
-          if (found) {
-            users[result.players[i].userId].beaten++;
+      } else {
+        var position;
+        var found = false;
+
+        for (var i = 0; i < result.players.length; ++i) {
+          if (result.players[i].userId == userId) {
+            position = result.players[i].position;
+          }
+          
+          if (result.players[i].userId == userId) {
+            found = true;
+          } else if (users.hasOwnProperty(result.players[i].userId)) {
+            users[result.players[i].userId].total++;
+
+            if (found) {
+              users[result.players[i].userId].beaten++;
+            } else {
+              users[result.players[i].userId].lose++;
+            }
           }
         }
-      }
 
-      stats[result.players.length - 2][position] = (stats[result.players.length - 2][position] || 0) + 1;
+        stats[result.players.length - 2][position] = (stats[result.players.length - 2][position] || 0) + 1;
+      }
     }
   });
   
@@ -207,7 +222,7 @@ function compileStats(data, userId, users) {
 
   for (var uId in users) {
     if (users[uId].total > 0 && uId != userId) {
-      users[uId].winrate = Math.round(users[uId].beaten * 100 / users[uId].total);
+      users[uId].winrate = Math.round(users[uId].beaten * 100 / (users[uId].beaten + users[uId].lose));
     }
   }
   users[userId].highlight = true;

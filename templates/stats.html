@@ -134,7 +134,7 @@
             <span ng-show="sortType == 'winrate' && !sortReverse" class="arrow-up"></span>
           </th>
           <th width="15%">
-            W / L
+            W / L / D
           </th>
           <th width="10%"  ng-click="sortType = 'total'; sortReverse = !sortReverse">
             Total
@@ -160,7 +160,7 @@
             <span ng-show="!line.highlight && line.total > 0">{{ line.winrate }} %</span>
           </td>
           <td>
-            <span ng-show="!line.highlight && line.total > 0">{{ line.beaten }} / {{ line.total - line.beaten }}</span>
+            <span ng-show="!line.highlight && line.total > 0">{{ line.beaten }} / {{ line.lose }} / {{ line.draw }}</span>
           </td>
           <td>
             <span ng-show="!line.highlight && line.total > 0">{{ line.total }}</span>
