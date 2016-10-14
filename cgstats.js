@@ -19,7 +19,7 @@ var express = require('express'),
 
 // ****************************
 
-var games = ["unleash-the-geek-2016", "multi-codebusters", "multi-smash-the-code", "multi-coders-strike-back", "multi-back-to-the-code", "multi-great-escape", "multi-platinum-rift2", "multi-platinum-rift", "multi-poker-chip-race", "multi-game-of-drone", "multi-tron-battle", "hypersonic", "codebusters", "smash-the-code", "coders-strike-back", "sf2442", "back-to-the-code", "the-great-escape", "platinum-rift-2", "platinum-rift", "winamax", "parrot", "20"];
+var games = ["multi-codebusters", "multi-smash-the-code", "multi-coders-strike-back", "multi-back-to-the-code", "multi-great-escape", "multi-platinum-rift2", "multi-platinum-rift", "multi-poker-chip-race", "multi-game-of-drone", "multi-tron-battle", "hypersonic", "codebusters", "smash-the-code", "coders-strike-back", "sf2442", "back-to-the-code", "the-great-escape", "platinum-rift-2", "platinum-rift", "winamax", "parrot", "20"];
 var optimizations = ["thor-codesize", "paranoid-codesize", "temperatures-codesize"];
 
 // *****************************
@@ -73,7 +73,7 @@ app.get('/search*', function(req, res) {
           break;
         }
       }
-	  
+
       for (var i = Math.max(0, userIdx - 20); i <= userIdx + 20 && i < body.success.users.length; i++) {
         if (body.success.users[i].codingamer && body.success.users[i].codingamer.userId) {
           users[body.success.users[i].codingamer.userId] = body.success.users[i];
@@ -160,7 +160,7 @@ function compileStats(data, userId, users) {
     users[uId].total = 0;
     users[uId].winrate = 0;
   }
-  
+
   // Global winrate stats
   data.lastBattles.forEach(function(result) {
     if (result.done && result.players.length >= 2) {
@@ -180,7 +180,7 @@ function compileStats(data, userId, users) {
           if (result.players[i].userId == userId) {
             position = result.players[i].position;
           }
-          
+
           if (result.players[i].userId == userId) {
             found = true;
           } else if (users.hasOwnProperty(result.players[i].userId)) {
@@ -198,7 +198,7 @@ function compileStats(data, userId, users) {
       }
     }
   });
-  
+
   for (var i = stats.length - 1; i >= 0; --i) {
     var total = 0;
 
@@ -226,12 +226,12 @@ function compileStats(data, userId, users) {
     }
   }
   users[userId].highlight = true;
-  
+
   var result = {
     stats: stats,
     users: _.values(users)
   };
-  
+
   return result;
 }
 
