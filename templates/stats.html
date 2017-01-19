@@ -149,7 +149,7 @@
             {{ line.rank }}
           </td>
           <td>
-            {{ line.pseudo }}
+            <a ui-sref="app.stats({ game: game, player: line.pseudo })">{{ line.pseudo }}</a>
           </td>
           <td>
             {{ line.score }}

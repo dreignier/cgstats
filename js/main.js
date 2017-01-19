@@ -54,15 +54,16 @@ angular.module('cgstats', ['ui.router'])
 
     $scope.sortType = 'rank';
     $scope.sortReverse = false;
-    
+
     $scope.player = response.data.player;
     $scope.stats = response.data.stats.stats || response.data.stats;
     $scope.details = response.data.stats.users;
     $scope.mode = response.data.mode;
+    $scope.game = $stateParams.game;
 
     if ($scope.mode == 'optim') {
       $scope.score = 0;
-      
+
       for (var i = 0; i < 5 && i < $scope.stats.length; ++i) {
         $scope.score += $scope.stats[i].points;
       }
