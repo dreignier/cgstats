@@ -43,7 +43,7 @@ angular.module('cgstats', ['ui.router'])
   };
 })
 
-.controller('list', function($scope, $http, $stateParams) {
+.controller('list', function($scope, $http, $stateParams, $timeout) {
   $scope.loading = true;
 
   $http.get(url + '/search?game=' + encodeURIComponent($stateParams.game.trim()) + '&player=' + encodeURIComponent($stateParams.player.trim()))
@@ -68,6 +68,10 @@ angular.module('cgstats', ['ui.router'])
         $scope.score += $scope.stats[i].points;
       }
     }
+
+    $timeout(function() {
+      window.scrollTo(0, document.getElementById('search-time').getBoundingClientRect().top);
+    }, 1, false);
   })
 
   .catch(function() {
