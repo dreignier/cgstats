@@ -157,7 +157,7 @@
             <span ng-show="line.progress == 'DECREASE'" class="arrow-red"></span>
           </td>
           <td>
-            <span ng-show="!line.highlight && line.total > 0">{{ line.winrate }} %</span>
+            <span ng-show="!line.highlight && line.total > 0">{{ line.winrate }} ± {{ line.winrateError }} %</span>
           </td>
           <td>
             <span ng-show="!line.highlight && line.total > 0">{{ line.beaten }} / {{ line.lose }} / {{ line.draw }}</span>
