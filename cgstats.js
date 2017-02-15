@@ -228,7 +228,7 @@ function compileStats(data, userId, users) {
       
       var winRateFraction = users[uId].winrate/100;
           
-      users[uId].winrateError = 100 * Math.sqrt(winRateFraction * (1 - winRateFraction) / numberOfGames);
+      users[uId].winrateError = 100 * 1.96 * Math.sqrt(winRateFraction * (1 - winRateFraction) / numberOfGames);
       users[uId].winrateError = Number(users[uId].winrateError.toFixed(1));
     }
   }
