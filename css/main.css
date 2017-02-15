@@ -73,3 +73,22 @@ textarea {
 .faded {
   opacity: 0.5;
 }
+
+.winrate-error {
+  font-size: 9px;
+}
+
+.winrate-cell {
+  position: relative;
+}
+
+.winrate-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.winrate-text {
+  position: absolute;
+}

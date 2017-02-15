@@ -144,7 +144,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, danger : !line.highlight && line.winrate <= 40 && line.total > 0, warning : !line.highlight && line.winrate <= 50 && line.total > 0, faded: !line.highlight && line.total < 5 }">
+        <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, faded: !line.highlight && line.total < 5 }">
           <td>
             {{ line.rank }}
           </td>
@@ -156,8 +156,10 @@
             <span ng-show="line.progress == 'INCREASE'" class="arrow-green"></span>
             <span ng-show="line.progress == 'DECREASE'" class="arrow-red"></span>
           </td>
-          <td>
-            <span ng-show="!line.highlight && line.total > 0">{{ line.winrate }} ± {{ line.winrateError }} %</span>
+          <td class="winrate-cell">
+            <div ng-show="!line.highlight && line.total > 5 && line.winrate - line.winrateError > 50" ng-style="{ width: (line.winrate - line.winrateError - 50)*2 + '%'}" class="bg-success winrate-progress winrate-green"></div>
+            <div ng-show="!line.highlight && line.total > 5 && line.winrate - line.winrateError < 50" ng-style="{ width: (50 - line.winrate + line.winrateError)*2 + '%'}" class="bg-danger winrate-progress winrate-red"></div>
+            <span ng-show="!line.highlight && line.total > 0" class="winrate-text">{{ line.winrate }}% <span class="winrate-error">±{{ line.winrateError }}%</span></span>
           </td>
           <td>
             <span ng-show="!line.highlight && line.total > 0">{{ line.beaten }} / {{ line.lose }} / {{ line.draw }}</span>
