@@ -76,6 +76,7 @@ textarea {
 
 .winrate-error {
   font-size: 9px;
+  cursor: help;
 }
 
 .winrate-cell {
