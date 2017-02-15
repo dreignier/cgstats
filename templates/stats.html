@@ -159,7 +159,7 @@
           <td class="winrate-cell">
             <div ng-show="!line.highlight && line.total >= 5 && line.winrate > 50" ng-style="{ width: (line.winrate - 50)*2 + '%'}" class="bg-success winrate-progress winrate-green"></div>
             <div ng-show="!line.highlight && line.total >= 5 && line.winrate < 50" ng-style="{ width: (50 - line.winrate)*2 + '%'}" class="bg-danger winrate-progress winrate-red"></div>
-            <span ng-show="!line.highlight && line.total > 0" class="winrate-text">{{ line.winrate }}% <span class="winrate-error text-right" title="95% confidence cnterval">±{{ line.winrateError }}%</span></span>
+            <span ng-show="!line.highlight && line.total > 0" class="winrate-text">{{ line.winrate }}% <span class="winrate-error text-right" title="95% confidence interval">±{{ line.winrateError }}%</span></span>
           </td>
           <td>
             <span ng-show="!line.highlight && line.total > 0">{{ line.beaten }} / {{ line.lose }} / {{ line.draw }}</span>
