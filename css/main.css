@@ -34,8 +34,8 @@ textarea {
 
 .arrow-up, .arrow-down, .arrow-red, .arrow-green {
   display: inline-block;
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
 }
@@ -87,8 +87,8 @@ textarea {
 .winrate-progress {
   max-width: 100%;
   position: absolute;
-  left: 0;
-  top: 0;
+  left: -1px;
+  top: -1px;
   bottom: 0;
 }
 
