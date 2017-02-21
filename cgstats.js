@@ -17,6 +17,8 @@ var express = require('express'),
     request = require('request'),
     _ = require('underscore');
 
+var jStat = require('jstat').jStat;
+
 // ****************************
 
 var games = ["multi-fantastic-bits", "fantastic-bits", "multi-hypersonic", "multi-codebusters", "multi-smash-the-code", "multi-coders-strike-back", "multi-back-to-the-code", "multi-great-escape", "multi-platinum-rift2", "multi-platinum-rift", "multi-poker-chip-race", "multi-game-of-drone", "multi-tron-battle", "hypersonic", "codebusters", "smash-the-code", "coders-strike-back", "sf2442", "back-to-the-code", "the-great-escape", "platinum-rift-2", "platinum-rift", "winamax", "parrot", "20"];
@@ -159,6 +161,8 @@ function compileStats(data, userId, users) {
     users[uId].beaten = 0;
     users[uId].total = 0;
     users[uId].winrate = 0;
+    users[uId].winrateErrorUp = 0;
+    users[uId].winrateErrorDown = 0;
     users[uId].winrateError = 0;
   }
 
@@ -226,10 +230,11 @@ function compileStats(data, userId, users) {
       var numberOfGames = users[uId].beaten + users[uId].lose;
       users[uId].winrate = Math.round(users[uId].beaten * 100 / (numberOfGames));
       
-      var winRateFraction = users[uId].winrate/100;
-          
-      users[uId].winrateError = 100 * 1.96 * Math.sqrt(winRateFraction * (1 - winRateFraction) / numberOfGames);
-      users[uId].winrateError = Number(users[uId].winrateError.toFixed(1));
+      var alpha=0.05;
+      users[uId].winrateErrorUp = 100*(1-jStat.beta.inv(alpha/2,numberOfGames-users[uId].beaten,users[uId].beaten+1));
+      users[uId].winrateErrorUp = Number(users[uId].winrateErrorUp.toFixed(1));
+      users[uId].winrateErrorDown = 100*(1-jStat.beta.inv(1-alpha/2,numberOfGames-users[uId].beaten+1,users[uId].beaten));
+      users[uId].winrateErrorDown = Number(users[uId].winrateErrorDown.toFixed(1));
     }
   }
 
