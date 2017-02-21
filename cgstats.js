@@ -16,7 +16,7 @@
 var express = require('express'),
     request = require('request'),
     _ = require('underscore'),
-    jStat = require('jstat').jStat;
+    jStat = require('jStat').jStat;
 
 // ****************************
 
