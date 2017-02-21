@@ -77,7 +77,9 @@ textarea {
 .winrate-error {
   font-size: 9px;
   cursor: help;
-  margin-left: 10px;
+  position: absolute;
+  right: 8px;
+  top: 10px;
 }
 
 .winrate-cell {
@@ -89,7 +91,12 @@ textarea {
   position: absolute;
   left: -1px;
   top: -1px;
+  bottom: 1px;
+}
+
+tr:first-child .winrate-progress {
   bottom: 0;
+  top: 0;
 }
 
 .winrate-text {
