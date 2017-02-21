@@ -34,8 +34,8 @@ textarea {
 
 .arrow-up, .arrow-down, .arrow-red, .arrow-green {
   display: inline-block;
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
 }
@@ -72,4 +72,33 @@ textarea {
 
 .faded {
   opacity: 0.5;
+}
+
+.winrate-error {
+  font-size: 9px;
+  cursor: help;
+  position: absolute;
+  right: 8px;
+  top: 10px;
+}
+
+.winrate-cell {
+  position: relative;
+}
+
+.winrate-progress {
+  max-width: 100%;
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  bottom: 1px;
+}
+
+tr:first-child .winrate-progress {
+  bottom: 0;
+  top: 0;
+}
+
+.winrate-text {
+  position: absolute;
 }

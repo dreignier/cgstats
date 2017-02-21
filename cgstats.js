@@ -223,13 +223,16 @@ function compileStats(data, userId, users) {
 
   for (var uId in users) {
     if (users[uId].total > 0 && uId != userId) {
-      users[uId].winrate = Math.round(users[uId].beaten * 100 / (users[uId].beaten + users[uId].lose));
-      WinRateFraction=users[uId].winrate/100;
-      NumberOfGames=users[uId].beaten + users[uId].lose;
-      users[uId].winrateError = 100*Math.sqrt(WinRateFraction*(1-WinRateFraction)/NumberOfGames);
-      users[uId].winrateError=users[uId].winrateError.toFixed(1);
+      var numberOfGames = users[uId].beaten + users[uId].lose;
+      users[uId].winrate = Math.round(users[uId].beaten * 100 / (numberOfGames));
+      
+      var winRateFraction = users[uId].winrate/100;
+          
+      users[uId].winrateError = 100 * 1.96 * Math.sqrt(winRateFraction * (1 - winRateFraction) / numberOfGames);
+      users[uId].winrateError = Number(users[uId].winrateError.toFixed(1));
     }
   }
+
   users[userId].highlight = true;
 
   var result = {
