@@ -144,10 +144,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="line in details | orderBy : sortType : sortReverse"
-          ng-class="{ highlight : line.highlight }"
-          ng-style="{ opacity: line.highlight ? 1 : !line.total ? 0.5 : 1 - line.winrateErrorRange/400 }"
-        >
+        <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, faded: !line.highlight && line.total < 5 }">
           <td>
             {{ line.rank }}
           </td>
