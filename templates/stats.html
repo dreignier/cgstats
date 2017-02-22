@@ -156,9 +156,9 @@
             <span ng-show="line.progress == 'INCREASE'" class="arrow-green"></span>
             <span ng-show="line.progress == 'DECREASE'" class="arrow-red"></span>
           </td>
-          <td class="winrate-cell">
-            <div ng-show="!line.highlight && line.total >= 5 && line.winrate > 50" ng-style="{ width: (line.winrate - 50)*2 + '%'}" class="bg-success winrate-progress winrate-green"></div>
-            <div ng-show="!line.highlight && line.total >= 5 && line.winrate < 50" ng-style="{ width: (50 - line.winrate)*2 + '%'}" class="bg-danger winrate-progress winrate-red"></div>
+          <td class="winrate-cell"
+            ng-style="{ 'background': line.highlight || line.total < 5 ? '' : line.winrate > 50 ? 'linear-gradient(to right, #ffffff 0%, #ffffff 49%, #dff0d8 50%, #dff0d8 ' + line.winrate + '%, #ffffff ' + (line.winrate + 1) + '%)' : line.winrate < 50 ? 'linear-gradient(to right, #ffffff 0%, #ffffff ' + (line.winrate) + '%, #f2dede ' + (line.winrate + 1) + '%, #f2dede 50%, #ffffff 51%)' : ''}"
+          >
             <span ng-show="!line.highlight && line.total > 0" class="winrate-text">{{ line.winrate }}%</span>
             <span ng-show="!line.highlight && line.total > 0" class="winrate-error" title="95% confidence interval">[{{ line.winrateErrorDown }}%, {{ line.winrateErrorUp }}%]</span>
           </td>

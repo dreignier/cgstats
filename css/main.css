@@ -84,14 +84,7 @@ textarea {
 
 .winrate-cell {
   position: relative;
-}
-
-.winrate-progress {
-  max-width: 100%;
-  position: absolute;
-  left: -1px;
-  top: -1px;
-  bottom: 1px;
+  min-width: 110px;
 }
 
 tr:first-child .winrate-progress {
