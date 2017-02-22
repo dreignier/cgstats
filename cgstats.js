@@ -230,10 +230,8 @@ function compileStats(data, userId, users) {
       users[uId].winrate = Math.round(users[uId].beaten * 100 / numberOfGames);
 
       var alpha = 0.05;
-      users[uId].winrateErrorUp = 100*(1 - jStat.beta.inv(alpha/2, numberOfGames - users[uId].beaten, users[uId].beaten + 1));
-      users[uId].winrateErrorUp = Number(users[uId].winrateErrorUp.toFixed(1)) || 100;
-      users[uId].winrateErrorDown = 100*(1 - jStat.beta.inv(1 - alpha/2, numberOfGames - users[uId].beaten + 1, users[uId].beaten));
-      users[uId].winrateErrorDown = Number(users[uId].winrateErrorDown.toFixed(1)) || 0;
+      users[uId].winrateErrorUp = Math.round(100*(1 - jStat.beta.inv(alpha/2, numberOfGames - users[uId].beaten, users[uId].beaten + 1)));
+      users[uId].winrateErrorDown = Math.round(100*(1 - jStat.beta.inv(1 - alpha/2, numberOfGames - users[uId].beaten + 1, users[uId].beaten)));
       users[uId].winrateErrorRange = users[uId].winrateErrorUp - users[uId].winrateErrorDown;
     }
   }
