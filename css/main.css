@@ -95,3 +95,7 @@ tr:first-child .winrate-progress {
 .winrate-text {
   position: absolute;
 }
+
+.button-csv {
+  margin-bottom: 10px;
+}

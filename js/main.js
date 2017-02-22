@@ -69,6 +69,13 @@ angular.module('cgstats', ['ui.router'])
       }
     }
 
+    $scope.csv = 'Rank;Nick;Score;Winrate;WinrateErrorDown;WinrateErrorUp;Wins;Loses;Draws;Total\n';
+    $scope.csv += $scope.details.filter(function(line) {
+      return line.pseudo !== $scope.player.pseudo && line.total > 0;
+    }).map(function(line) {
+      return [line.rank, line.pseudo, line.score, line.winrate, line.winrate, line.winrateErrorDown, line.winrateErrorUp, line.beaten, line.lose, line.draw, line.total].join(';');
+    }).join('\n');
+
     $timeout(function() {
       window.scrollTo(0, document.getElementById('search-time').getBoundingClientRect().top);
     }, 1, false);

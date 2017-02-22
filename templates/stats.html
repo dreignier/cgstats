@@ -171,6 +171,10 @@
         </tr>
       </tbody>
     </table>
+
+    <button class="btn btn-primary button-csv" ng-click="showCSV = !showCSV">CSV</button>
+
+    <textarea class="form-control" ng-show="showCSV" readonly="true" ng-model="csv"></textarea>
   </div>
 
   <div class="col-xs-12" ng-if="player && mode=='optim'">
