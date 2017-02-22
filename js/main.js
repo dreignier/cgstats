@@ -81,7 +81,7 @@ angular.module('cgstats', ['ui.router'])
     })
 
     .map(function(line) {
-      return [line.rank, line.pseudo, line.score, line.winrate, line.winrate, line.winrateErrorDown, line.winrateErrorUp, line.beaten, line.lose, line.draw, line.total].join(';');
+      return [line.rank, line.pseudo, line.score, line.winrate, line.winrateErrorDown, line.winrateErrorUp, line.beaten, line.lose, line.draw, line.total].join(';');
     }).join('\n');
 
     $timeout(function() {
