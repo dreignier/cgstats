@@ -73,7 +73,7 @@ angular.module('cgstats', ['ui.router'])
     $scope.csv += $scope.details
 
     .filter(function(line) {
-      return line.pseudo !== $scope.player.pseudo && line.total > 0;
+      return line.pseudo !== $scope.player.pseudo;
     })
 
     .sort(function(a, b) {
