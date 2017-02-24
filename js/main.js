@@ -72,10 +72,6 @@ angular.module('cgstats', ['ui.router'])
     $scope.csv = 'Rank;Nick;Score;Winrate;WinrateErrorDown;WinrateErrorUp;Wins;Loses;Draws;Total\n';
     $scope.csv += $scope.details
 
-    .filter(function(line) {
-      return line.pseudo !== $scope.player.pseudo;
-    })
-
     .sort(function(a, b) {
       return a.rank > b.rank ? +1 : -1;
     })
