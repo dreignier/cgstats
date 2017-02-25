@@ -99,3 +99,7 @@ tr:first-child .winrate-progress {
 .button-csv {
   margin-bottom: 10px;
 }
+
+.latest-checkbox {
+  margin-left: 15px;
+}
