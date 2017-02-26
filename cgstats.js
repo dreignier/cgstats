@@ -20,7 +20,7 @@ var express = require('express'),
 
 // ****************************
 
-var games = ["multi-fantastic-bits", "fantastic-bits", "multi-hypersonic", "multi-codebusters", "multi-smash-the-code", "multi-coders-strike-back", "multi-back-to-the-code", "multi-great-escape", "multi-platinum-rift2", "multi-platinum-rift", "multi-poker-chip-race", "multi-game-of-drone", "multi-tron-battle", "hypersonic", "codebusters", "smash-the-code", "coders-strike-back", "sf2442", "back-to-the-code", "the-great-escape", "platinum-rift-2", "platinum-rift", "winamax", "parrot", "20"];
+var games = ["ghost-in-the-cell", "multi-fantastic-bits", "fantastic-bits", "multi-hypersonic", "multi-codebusters", "multi-smash-the-code", "multi-coders-strike-back", "multi-back-to-the-code", "multi-great-escape", "multi-platinum-rift2", "multi-platinum-rift", "multi-poker-chip-race", "multi-game-of-drone", "multi-tron-battle", "hypersonic", "codebusters", "smash-the-code", "coders-strike-back", "sf2442", "back-to-the-code", "the-great-escape", "platinum-rift-2", "platinum-rift", "winamax", "parrot", "20"];
 var optimizations = ["thor-codesize", "paranoid-codesize", "temperatures-codesize"];
 
 // *****************************
@@ -225,7 +225,7 @@ function compileStats(data, myIdentifier, users, latest) {
         }
 
         // If 'useInStats' is FALSE, that means that all the opponents of this game have resubmitted a new AI since the fight occured
-        if (useInStats) {
+        if (!latest || useInStats) {
           stats[result.players.length - 2][position] = (stats[result.players.length - 2][position] || 0) + 1;
         }
       }
