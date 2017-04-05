@@ -115,20 +115,20 @@
     <table class="table table-bordered">
       <thead>
         <tr class="info">
-          <th width="10%" ng-click="sortType = 'rank'; sortReverse = !sortReverse">
+          <th width="7%" ng-click="sortType = 'rank'; sortReverse = !sortReverse">
             Rank
             <span ng-show="sortType == 'rank' && sortReverse" class="arrow-down"></span>
             <span ng-show="sortType == 'rank' && !sortReverse" class="arrow-up"></span>
           </th>
-          <th width="40%">
+          <th width="30%">
             Nick
           </th>
-          <th width="10%"  ng-click="sortType = 'score'; sortReverse = !sortReverse">
+          <th width="10%" ng-click="sortType = 'score'; sortReverse = !sortReverse">
             Score
             <span ng-show="sortType == 'score' && sortReverse" class="arrow-down"></span>
             <span ng-show="sortType == 'score' && !sortReverse" class="arrow-up"></span>
           </th>
-          <th width="15%"  ng-click="sortType = 'winrate'; sortReverse = !sortReverse">
+          <th width="15%" ng-click="sortType = 'winrate'; sortReverse = !sortReverse">
             Winrate
             <span ng-show="sortType == 'winrate' && sortReverse" class="arrow-down"></span>
             <span ng-show="sortType == 'winrate' && !sortReverse" class="arrow-up"></span>
@@ -136,10 +136,15 @@
           <th width="15%">
             Wins / Loses / Draws
           </th>
-          <th width="10%"  ng-click="sortType = 'total'; sortReverse = !sortReverse">
+          <th width="7%" ng-click="sortType = 'total'; sortReverse = !sortReverse">
             Total
             <span ng-show="sortType == 'total' && sortReverse" class="arrow-down"></span>
             <span ng-show="sortType == 'total' && !sortReverse" class="arrow-up"></span>
+          </th>
+          <th width="16%" ng-click="sortType = 'submit'; sortReverse = !sortReverse">
+            Last submit
+            <span ng-show="sortType == 'submit' && sortReverse" class="arrow-down"></span>
+            <span ng-show="sortType == 'submit' && !sortReverse" class="arrow-up"></span>
           </th>
         </tr>
       </thead>
@@ -149,6 +154,9 @@
             {{ line.rank }}
           </td>
           <td>
+            <div ng-if="line.codingamer.avatar" class="avatar">
+              <img ng-src="https://static.codingame.com/servlet/fileservlet?id={{ line.codingamer.avatar }}&format=navigation_avatar" />
+            </div>
             <a ui-sref="app.stats({ game: game, player: line.pseudo })">{{ line.pseudo }}</a>
           </td>
           <td>
@@ -157,7 +165,7 @@
             <span ng-show="line.progress == 'DECREASE'" class="arrow-red"></span>
           </td>
           <td class="winrate-cell"
-            ng-style="{ 'background': line.highlight || line.total < 5 ? '' : line.winrate > 50 ? 'linear-gradient(to right, #ffffff 0%, #ffffff 49%, #dff0d8 50%, #dff0d8 ' + line.winrate + '%, #ffffff ' + (line.winrate + 1) + '%)' : line.winrate < 50 ? 'linear-gradient(to right, #ffffff 0%, #ffffff ' + (line.winrate) + '%, #f2dede ' + (line.winrate + 1) + '%, #f2dede 50%, #ffffff 51%)' : ''}"
+            ng-style="{ 'background': line.highlight || line.total < 5 ? '' : line.winrate > 50 ? 'linear-gradient(to right, transparent 0%, transparent 49%, #dff0d8 50%, #dff0d8 ' + line.winrate + '%, transparent ' + (line.winrate + 1) + '%)' : line.winrate < 50 ? 'linear-gradient(to right, transparent 0%, transparent ' + (line.winrate) + '%, #f2dede ' + (line.winrate + 1) + '%, #f2dede 50%, transparent 51%)' : ''}"
           >
             <span ng-show="!line.highlight && line.total > 0" class="winrate-text">{{ line.winrate }}%</span>
             <span ng-show="!line.highlight && line.total > 0" class="winrate-error" title="95% confidence interval">[{{ line.winrateErrorDown }}%, {{ line.winrateErrorUp }}%]</span>
@@ -167,6 +175,9 @@
           </td>
           <td>
             <span ng-show="!line.highlight && line.total > 0">{{ line.total }}</span>
+          </td>
+          <td class="last-submit-cell">
+            <span>{{ line.submitText }}</span>
           </td>
         </tr>
       </tbody>

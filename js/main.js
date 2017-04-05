@@ -72,6 +72,14 @@ angular.module('cgstats', ['ui.router'])
       for (var i = 0; i < 5 && i < $scope.stats.length; ++i) {
         $scope.score += $scope.stats[i].points;
       }
+    } else {
+      $scope.details.forEach(function(line) {
+        line.submit = line.creationTime || 0;
+
+        if (line.submit) {
+          line.submitText = moment(line.submit).calendar();
+        }
+      });
     }
 
     $scope.csv = 'Rank;Nick;Score;Winrate;WinrateErrorDown;WinrateErrorUp;Wins;Loses;Draws;Total\n';

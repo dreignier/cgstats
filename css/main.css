@@ -32,6 +32,10 @@ textarea {
   background: rgba(51, 51, 51, 0.07);
 }
 
+table tr:hover {
+  background: rgba(51, 51, 51, 0.07);
+}
+
 .arrow-up, .arrow-down, .arrow-red, .arrow-green {
   display: inline-block;
   width: 0;
@@ -98,4 +102,20 @@ tr:first-child .winrate-progress {
 
 .latest-checkbox {
   margin-left: 15px;
+}
+
+.last-submit-cell {
+  font-size: 10px;
+}
+
+.avatar {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.avatar img {
+  width: 24px;
+  height: 24px;
 }
