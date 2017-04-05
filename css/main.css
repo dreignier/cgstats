@@ -76,24 +76,20 @@ textarea {
 
 .winrate-error {
   font-size: 9px;
-  cursor: help;
-  position: absolute;
-  right: 8px;
-  top: 10px;
+  cursor: help;;
+  display: inline-block;
+  float: right;
+  position: relative;
+  top: 3px;
 }
 
 .winrate-cell {
-  position: relative;
   min-width: 110px;
 }
 
 tr:first-child .winrate-progress {
   bottom: 0;
   top: 0;
-}
-
-.winrate-text {
-  position: absolute;
 }
 
 .button-csv {
