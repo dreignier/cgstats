@@ -82,16 +82,20 @@ angular.module('cgstats', ['ui.router'])
       });
     }
 
-    $scope.csv = 'Rank;Nick;Score;Winrate;WinrateErrorDown;WinrateErrorUp;Wins;Loses;Draws;Total\n';
-    $scope.csv += $scope.details
+    if ($scope.details) {
+      $scope.csv = 'Rank;Nick;Score;Winrate;WinrateErrorDown;WinrateErrorUp;Wins;Loses;Draws;Total\n';
+      $scope.csv += $scope.details
 
-    .sort(function(a, b) {
-      return a.rank > b.rank ? +1 : -1;
-    })
+      .sort(function(a, b) {
+        return a.rank > b.rank ? +1 : -1;
+      })
 
-    .map(function(line) {
-      return [line.rank, line.pseudo, line.score, line.winrate, line.winrateErrorDown, line.winrateErrorUp, line.beaten, line.lose, line.draw, line.total].join(';');
-    }).join('\n');
+      .map(function(line) {
+        return [line.rank, line.pseudo, line.score, line.winrate, line.winrateErrorDown, line.winrateErrorUp, line.beaten, line.lose, line.draw, line.total].join(';');
+      }).join('\n');
+    } else {
+      $scope.csv = '';
+    }
 
     $timeout(function() {
       window.scrollTo(0, document.getElementById('search-time').getBoundingClientRect().top);
