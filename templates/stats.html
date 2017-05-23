@@ -2,7 +2,8 @@
   <span class="glyphicon glyphicon-hourglass loading"></span>
 </div>
 <div ng-class="{ cloak : !fail }">
-  <p class="bg-danger">Error, sorry. Try to ask Magus</p>
+  <p class="bg-danger" ng-show="status != 404">Error, sorry. Try to ask Magus</p>
+  <p class="bg-danger" ng-show="status == 404">Error 404. Player not found. Double check your nickname and the selected puzzle.</p>
 </div>
 <div id="search-time" ng-class="{ cloak : !date }">
   <p>Search done at {{ date }}</p>

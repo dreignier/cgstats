@@ -18,7 +18,7 @@ angular.module('cgstats', ['ui.router'])
     templateUrl: '/templates/stats.html',
     controller: 'list',
     params: {
-      latest:null
+      latest: null
     }
   });
 })
@@ -98,8 +98,9 @@ angular.module('cgstats', ['ui.router'])
     }, 1, false);
   })
 
-  .catch(function() {
+  .catch(function(response) {
     $scope.fail = true;
+    $scope.status = response.status;
   })
 
   .then(function() {
