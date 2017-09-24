@@ -39,7 +39,7 @@ app.get('/search*', function(req, res) {
   }
 
   if (games.indexOf(game) != -1) {
-    var api = game.substring(0, 6) == 'multi-' ? 'getPuzzleLeaderboard' : 'getChallengeLeaderboard';
+    var api = game.substring(0, 6) == 'multi-' ? 'getFilteredPuzzleLeaderboard' : 'getFilteredChallengeLeaderboard';
 
     game = game.replace('multi-', '');
 
@@ -48,7 +48,7 @@ app.get('/search*', function(req, res) {
       url : 'https://www.codingame.com/services/LeaderboardsRemoteService/' + api,
       method : 'POST',
       json : true,
-      body : [game + '', "", "global"]
+      body : [game + '', , , {"active" : true, "column" : "keyword", "filter" : player}]
     }, function(error, response, body) {
 
       if (error) {
@@ -127,10 +127,10 @@ app.get('/search*', function(req, res) {
     });
   } else if (optimizations.indexOf(game) != -1) {
     request({
-      url : 'https://www.codingame.com/services/LeaderboardsRemoteService/getPuzzleLeaderboard',
+      url : 'https://www.codingame.com/services/LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
       method : 'POST',
       json : true,
-      body : [game, "1724dffd64c8c26c9fa9a189691387b5760508", "global"]
+      body : [game, , , {"active" : true, "column" : "keyword", "filter" : player}]
     }, function(error, response, body) {
       if (error) {
         console.error(error);
