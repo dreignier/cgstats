@@ -2,8 +2,7 @@
   <span class="glyphicon glyphicon-hourglass loading"></span>
 </div>
 <div ng-class="{ cloak : !fail }">
-  <p class="bg-danger" ng-show="status != 404">Error, sorry. Try to ask Magus</p>
-  <p class="bg-danger" ng-show="status == 404">Error 404. Player not found. Double check your nickname and the selected puzzle.</p>
+  <p class="bg-danger">Error 404. Player not found. Double check your nickname and the selected puzzle. Please note that cgstats can't find your ranking if you are above the first 1000 players. If you think cgstats should find you and this is an error, try to ask Magus.</p>
 </div>
 <div id="search-time" ng-class="{ cloak : !date }">
   <p>Search done at {{ date }}</p>
