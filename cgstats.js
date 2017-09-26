@@ -48,7 +48,7 @@ app.get('/search*', function(req, res) {
       url : 'https://www.codingame.com/services/LeaderboardsRemoteService/' + api,
       method : 'POST',
       json : true,
-      body : [game + '', , , {"active" : true, "column" : "keyword", "filter" : player}]
+      body : [game, undefined, 'global', { active: false, column: undefined, filter: undefined}]
     }, function(error, response, body) {
 
       if (error) {
