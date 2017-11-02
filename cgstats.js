@@ -158,6 +158,31 @@ app.listen(9888);
 
 // *****************************
 
+function getStats(resource, parameters) {
+  return new Promise(function(resolve, reject) {
+
+    request({
+      url: 'https://www.codingame.com/services/' + resource,
+      method : 'POST',
+      json : true,
+      body : parameters,
+    }, function(error, response, body) {
+      if (error) {
+        console.error(error);
+        reject(error);
+        return;
+      }
+
+      if (!body || !body.success) {
+        console.error('No success in body', body);
+        reject(new Error('No success in body'));
+      }
+
+      resolve(body.success);
+    });
+  });
+}
+
 function compileStats(data, myIdentifier, users, latest) {
 
   var stats = [[], [], []];
