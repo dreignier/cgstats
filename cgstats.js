@@ -126,31 +126,20 @@ app.get('/search*', function(req, res) {
       });
     });
   } else if (optimizations.indexOf(game) != -1) {
-    request({
-      url : 'https://www.codingame.com/services/LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
-      method : 'POST',
-      json : true,
-      body : [game, , , {"active" : true, "column" : "keyword", "filter" : player}]
-    }, function(error, response, body) {
-      if (error) {
-        console.error(error);
-        res.status(500).end();
-        return;
-      }
-
-      if (!body || !body.success) {
-        console.error('No success in body', body);
-        res.status(500).end();
-      }
-
-      res.type('json').set({
+    getStats('LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
+      [game, , , {"active" : true, "column" : "keyword", "filter" : player}])
+      .then(function (response) {
+        res.type('json').set({
           'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
-      }).send(JSON.stringify({
-        player : player,
-        stats : compileOptimizationStats(body.success.users, player),
-        mode : 'optim'
-      })).end();
-    });
+        }).send(JSON.stringify({
+          player : player,
+          stats : compileOptimizationStats(response.users, player),
+          mode : 'optim'
+        })).end();
+      })
+      .catch(function(error) {
+        res.status(500).end();
+      });
   }
 });
 
