@@ -129,13 +129,36 @@ app.get('/search*', function(req, res) {
     getStats('LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
       [game, , , {"active" : true, "column" : "keyword", "filter" : player}])
       .then(function (response) {
-        res.type('json').set({
-          'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
-        }).send(JSON.stringify({
-          player : player,
-          stats : compileOptimizationStats(response.users, player),
-          mode : 'optim'
-        })).end();
+        var requests = response.users
+          .filter(function(rank) {
+            return (rank.pseudo || '').toLowerCase() == player.toLowerCase();
+          })
+          .map(function(rank) {
+            return getStats('LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
+              [game, , , {"active" : true, "column" : "SLANGUAGE", "filter" : rank.programmingLanguage}]);
+          });
+        Promise.all(requests)
+          .then(function(responses) {
+            var users = responses.map(function(response) {
+              return response.users;
+            })
+            .reduce(function(a, b) {
+              return a.concat(b);
+            }, []);
+            return {users: users, programmingLanguages: response.programmingLanguages};
+          })
+          .then(function(response) {
+            res.type('json').set({
+              'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
+            }).send(JSON.stringify({
+              player : player,
+              stats : compileOptimizationStats(response, player),
+              mode : 'optim'
+            })).end();
+          })
+          .catch(function(error) {
+            res.status(500).end();
+          });
       })
       .catch(function(error) {
         res.status(500).end();
@@ -292,11 +315,11 @@ function compileStats(data, myIdentifier, users, latest) {
 function compileOptimizationStats(data, player) {
   var stats = {};
 
-  data.forEach(function(rank) {
+  data.users.forEach(function(rank) {
     if (!stats[rank.programmingLanguage]) {
       stats[rank.programmingLanguage] = {
         rank : 0,
-        total : 0,
+        total : data.programmingLanguages[rank.programmingLanguage] || 0,
         found : false
       };
     }
@@ -310,8 +333,6 @@ function compileOptimizationStats(data, player) {
     if ((rank.pseudo || '').toLowerCase() == player.toLowerCase()) {
       stat.found = true;
     }
-
-    stat.total += 1;
   });
 
   var result = [];
