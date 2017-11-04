@@ -126,37 +126,74 @@ app.get('/search*', function(req, res) {
       });
     });
   } else if (optimizations.indexOf(game) != -1) {
-    request({
-      url : 'https://www.codingame.com/services/LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
-      method : 'POST',
-      json : true,
-      body : [game, , , {"active" : true, "column" : "keyword", "filter" : player}]
-    }, function(error, response, body) {
-      if (error) {
-        console.error(error);
+    getStats('LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
+      [game, , , {"active" : true, "column" : "keyword", "filter" : player}])
+      .then(function (response) {
+        var requests = response.users
+          .filter(function(rank) {
+            return (rank.pseudo || '').toLowerCase() == player.toLowerCase();
+          })
+          .map(function(rank) {
+            return getStats('LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
+              [game, , , {"active" : true, "column" : "SLANGUAGE", "filter" : rank.programmingLanguage}]);
+          });
+        Promise.all(requests)
+          .then(function(responses) {
+            var users = responses.map(function(response) {
+              return response.users;
+            })
+            .reduce(function(a, b) {
+              return a.concat(b);
+            }, []);
+            return {users: users, programmingLanguages: response.programmingLanguages};
+          })
+          .then(function(response) {
+            res.type('json').set({
+              'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
+            }).send(JSON.stringify({
+              player : player,
+              stats : compileOptimizationStats(response, player),
+              mode : 'optim'
+            })).end();
+          })
+          .catch(function(error) {
+            res.status(500).end();
+          });
+      })
+      .catch(function(error) {
         res.status(500).end();
-        return;
-      }
-
-      if (!body || !body.success) {
-        console.error('No success in body', body);
-        res.status(500).end();
-      }
-
-      res.type('json').set({
-          'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
-      }).send(JSON.stringify({
-        player : player,
-        stats : compileOptimizationStats(body.success.users, player),
-        mode : 'optim'
-      })).end();
-    });
+      });
   }
 });
 
 app.listen(9888);
 
 // *****************************
+
+function getStats(resource, parameters) {
+  return new Promise(function(resolve, reject) {
+
+    request({
+      url: 'https://www.codingame.com/services/' + resource,
+      method : 'POST',
+      json : true,
+      body : parameters,
+    }, function(error, response, body) {
+      if (error) {
+        console.error(error);
+        reject(error);
+        return;
+      }
+
+      if (!body || !body.success) {
+        console.error('No success in body', body);
+        reject(new Error('No success in body'));
+      }
+
+      resolve(body.success);
+    });
+  });
+}
 
 function compileStats(data, myIdentifier, users, latest) {
 
@@ -278,11 +315,11 @@ function compileStats(data, myIdentifier, users, latest) {
 function compileOptimizationStats(data, player) {
   var stats = {};
 
-  data.forEach(function(rank) {
+  data.users.forEach(function(rank) {
     if (!stats[rank.programmingLanguage]) {
       stats[rank.programmingLanguage] = {
         rank : 0,
-        total : 0,
+        total : data.programmingLanguages[rank.programmingLanguage] || 0,
         found : false
       };
     }
@@ -296,8 +333,6 @@ function compileOptimizationStats(data, player) {
     if ((rank.pseudo || '').toLowerCase() == player.toLowerCase()) {
       stat.found = true;
     }
-
-    stat.total += 1;
   });
 
   var result = [];
