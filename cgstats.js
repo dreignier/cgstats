@@ -141,10 +141,7 @@ app.get('/search*', function(req, res) {
           .then(function(responses) {
             var users = responses.map(function(response) {
               return response.users;
-            })
-            .reduce(function(a, b) {
-              return a.concat(b);
-            }, []);
+            });
             return {users: users, programmingLanguages: response.programmingLanguages};
           })
           .then(function(response) {
@@ -313,41 +310,27 @@ function compileStats(data, myIdentifier, users, latest) {
 }
 
 function compileOptimizationStats(data, player) {
-  var stats = {};
-
-  data.users.forEach(function(rank) {
-    if (!stats[rank.programmingLanguage]) {
-      stats[rank.programmingLanguage] = {
-        rank : 0,
-        total : data.programmingLanguages[rank.programmingLanguage] || 0,
-        found : false
-      };
-    }
-
-    var stat = stats[rank.programmingLanguage];
-
-    if (!stat.found) {
-      stat.rank += 1;
-    }
-
-    if ((rank.pseudo || '').toLowerCase() == player.toLowerCase()) {
-      stat.found = true;
-    }
-  });
-
   var result = [];
 
-  for (var language in stats) {
-    var stat = stats[language];
-    if (stat.found) {
-      result.push({
-        language : language,
-        rank : stat.rank,
-        total : stat.total,
-        points : Math.round(Math.pow(200, (stat.total - stat.rank + 1)/stat.total))
-      });
-    }
-  }
+  data.users.forEach(function(ranks) {
+    var index = ranks.findIndex(function (rank) {
+      return (rank.pseudo || '').toLowerCase() == player.toLowerCase();
+    });
+    if (index === -1) return;
+
+    var language = ranks[0].programmingLanguage;
+    var total = data.programmingLanguages[language];
+
+    result.push({
+      language : language,
+      rank : index + 1,
+      total : total,
+      codeSize: ranks[index].criteriaScore,
+      lead: index + 1 < ranks.length ? ranks[index + 1].criteriaScore - ranks[index].criteriaScore : null,
+      gap: index > 0 ? ranks[index].criteriaScore - ranks[index - 1].criteriaScore : null,
+      points : Math.round(Math.pow(200, (total - index)/total))
+    });
+  });
 
   result.sort(function(a, b) {
     return a.points < b.points ? +1 : a.points > b.points ? -1 : 0;

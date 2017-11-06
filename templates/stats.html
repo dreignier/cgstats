@@ -208,6 +208,15 @@
           <th>
             Points
           </th>
+          <th>
+            Code Size
+          </th>
+          <th>
+            Gap
+          </th>
+          <th>
+            Lead
+          </th>
         </tr>
       </thead>
       <tr ng-repeat="line in stats" ng-class="{ success : $index < 5 }">
@@ -215,6 +224,9 @@
         <td>{{ line.rank }}</td>
         <td>{{ line.total }}</td>
         <td>{{ line.points }}</td>
+        <td>{{ line.codeSize }}</td>
+        <td>{{ line.gap !== null ? line.gap : "–" }}</td>
+        <td>{{ line.lead !== null ? line.lead : "–" }}</td>
       </tr>
     </table>
   </div>
