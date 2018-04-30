@@ -69,10 +69,13 @@ app.get('/search*', function(req, res) {
 
       var userIdx = -1;
       for (var i = 0; i < body.success.users.length; ++i) {
-        if (!user && body.success.users[i].pseudo && body.success.users[i].pseudo.toLowerCase() == player.toLowerCase()) {
-          user = body.success.users[i];
+        //modified to allow searching for names (example: "eulersch" could bring "eulerscheZahl" as result)
+        if (body.success.users[i].pseudo && body.success.users[i].pseudo.toLowerCase().includes(player.toLowerCase())) { 
+          user = body.success.users[i];//set user if it contains the string
           userIdx = i;
-          break;
+          if(body.success.users[i].pseudo.toLowerCase() == player.toLowerCase()) {//stop iterating when it's an exact match
+            break;
+          }
         }
       }
         
