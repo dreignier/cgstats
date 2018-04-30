@@ -75,6 +75,11 @@ app.get('/search*', function(req, res) {
           break;
         }
       }
+        
+      if (!user) {//player not found//put here for optimizations
+        res.status(404).end();
+        return;
+      }
 
       for (var i = Math.max(0, userIdx - 20); i <= userIdx + 20 && i < body.success.users.length; i++) {
         if (latest) {
@@ -89,11 +94,6 @@ app.get('/search*', function(req, res) {
           }
         }
 
-      }
-
-      if (!user) {
-        res.status(404).end();
-        return;
       }
 
       // Get the games
