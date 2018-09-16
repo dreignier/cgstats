@@ -98,10 +98,10 @@ app.get('/search*', function(req, res) {
 
       // Get the games
       request({
-        url : 'https://www.codingame.com/services/gamesPlayersRankingRemoteService/findLastBattlesAndProgressByTestSessionHandle',
+        url : 'https://www.codingame.com/services/gamesPlayersRankingRemoteService/findLastBattlesByAgentId',
         method : 'POST',
         json : true,
-        body : [user.testSessionHandle, null]
+        body : [user.agentId, null]
       }, function(error, response, body) {
 
           if (error) {
@@ -207,7 +207,7 @@ function compileStats(data, myIdentifier, users, latest) {
   }
 
   // Global winrate stats
-  data.lastBattles.forEach(function(result) {
+  data.forEach(function(result) {
     if (result.done && result.players.length >= 2) {
 
       if (result.players.length === 2 && result.players[0].position === result.players[1].position) {
