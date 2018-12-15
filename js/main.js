@@ -18,7 +18,7 @@ angular.module('cgstats', ['ui.router'])
     templateUrl: '/templates/stats.html',
     controller: 'list',
     params: {
-      latest: null
+      countDraws: null
     }
   });
 })
@@ -39,7 +39,7 @@ angular.module('cgstats', ['ui.router'])
       $state.go('app.stats', {
         game: $scope.game,
         player: $scope.player,
-        latest:$scope.latest
+        countDraws: $scope.countDraws
       }, {
         reload: true
       });
@@ -50,7 +50,7 @@ angular.module('cgstats', ['ui.router'])
 .controller('list', function($scope, $http, $stateParams, $timeout) {
   $scope.loading = true;
 
-  $http.get(url + '/search?game=' + encodeURIComponent($stateParams.game.trim()) + '&player=' + encodeURIComponent($stateParams.player.trim()) + ($stateParams.latest ? ('&latest=' + $stateParams.latest) : ''))
+  $http.get(url + '/search?game=' + encodeURIComponent($stateParams.game.trim()) + '&player=' + encodeURIComponent($stateParams.player.trim()) + ($stateParams.countDraws ? ('&countDraws=' + $stateParams.countDraws) : ''))
 
   .then(function (response) {
 

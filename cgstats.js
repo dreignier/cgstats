@@ -30,8 +30,8 @@ var app = express();
 app.get('/search*', function(req, res) {
 
   var game = req.query.game,
-      player = req.query.player,
-      latest = req.query.latest || false;
+      player = req.query.player
+      countDraws = req.query.countDraws;
 
   if (!game || !player || (games.indexOf(game) == -1 && optimizations.indexOf(game) == -1)) {
     res.status(400).end();
@@ -77,18 +77,10 @@ app.get('/search*', function(req, res) {
       }
 
       for (var i = Math.max(0, userIdx - 20); i <= userIdx + 20 && i < body.success.users.length; i++) {
-        if (latest) {
-          // in 'latest' mode, players are indexed by their agentId
-          if (body.success.users[i].agentId) {
-            users[body.success.users[i].agentId] = body.success.users[i];
-          }
-        } else {
-          // in 'classic' mode, players are indexed by their userId
-          if (body.success.users[i].codingamer && body.success.users[i].codingamer.userId) {
-            users[body.success.users[i].codingamer.userId] = body.success.users[i];
-          }
+        // in 'classic' mode, players are indexed by their userId
+        if (body.success.users[i].codingamer && body.success.users[i].codingamer.userId) {
+          users[body.success.users[i].codingamer.userId] = body.success.users[i];
         }
-
       }
 
       if (!user) {
@@ -120,7 +112,7 @@ app.get('/search*', function(req, res) {
             'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
           }).send(JSON.stringify({
             player : user,
-            stats : compileStats(body.success, latest ? user.agentId : user.codingamer.userId, users, latest),
+            stats : compileStats(body.success, user.codingamer.userId, users, countDraws),
             mode : 'multi'
           })).end();
       });
@@ -192,7 +184,7 @@ function getStats(resource, parameters) {
   });
 }
 
-function compileStats(data, myIdentifier, users, latest) {
+function compileStats(data, myIdentifier, users, countDraws) {
 
   var stats = [[], [], []];
   for (var key in users) {
@@ -212,12 +204,7 @@ function compileStats(data, myIdentifier, users, latest) {
 
       if (result.players.length === 2 && result.players[0].position === result.players[1].position) {
         // It's a draw in a 1v1 game
-        var hisId;
-        if (latest) {
-          hisId = result.players[0].playerAgentId === myIdentifier ? result.players[1].playerAgentId : result.players[0].playerAgentId;
-        } else {
-          hisId = result.players[0].userId === myIdentifier ? result.players[1].userId : result.players[0].userId;
-        }
+        var hisId = result.players[0].userId === myIdentifier ? result.players[1].userId : result.players[0].userId;
 
         if (users[hisId]) {
           users[hisId].total++;
@@ -226,17 +213,10 @@ function compileStats(data, myIdentifier, users, latest) {
       } else {
         var position;
         var found = false;
-        var useInStats = false;
 
         for (var i = 0; i < result.players.length; ++i) {
 
-          // player identifier is its 'agentId' in 'latest' mode, 'userId' otherwise
-          var hisId;
-          if (latest) {
-            hisId = result.players[i].playerAgentId;
-          } else {
-            hisId = result.players[i].userId;
-          }
+          var hisId = result.players[i].userId;
 
           if (hisId == myIdentifier) {
             position = result.players[i].position;
@@ -245,11 +225,7 @@ function compileStats(data, myIdentifier, users, latest) {
           if (hisId == myIdentifier) {
             found = true;
           } else if (users.hasOwnProperty(hisId)) {
-            // This is the opponent last submit
-            useInStats = true;
-
             users[hisId].total++;
-
             if (found) {
               users[hisId].beaten++;
             } else {
@@ -258,10 +234,7 @@ function compileStats(data, myIdentifier, users, latest) {
           }
         }
 
-        // If 'useInStats' is FALSE, that means that all the opponents of this game have resubmitted a new AI since the fight occured
-        if (!latest || useInStats) {
-          stats[result.players.length - 2][position] = (stats[result.players.length - 2][position] || 0) + 1;
-        }
+        stats[result.players.length - 2][position] = (stats[result.players.length - 2][position] || 0) + 1;
       }
     }
   });
@@ -289,12 +262,20 @@ function compileStats(data, myIdentifier, users, latest) {
 
   for (var key in users) {
     if (users[key].total > 0 && key != myIdentifier) {
-      var numberOfGames = users[key].beaten + users[key].lose;
-      users[key].winrate = Math.round(users[key].beaten * 100 / numberOfGames);
+      var numberOfGames;
+      var victories;
+      if (countDraws) {
+        numberOfGames = users[key].total;
+        victories = users[key].beaten + users[key].draw / 2;
+      } else {
+        numberOfGames = users[key].beaten + users[key].lose;
+        victories = users[key].beaten
+      }
+      users[key].winrate = Math.round(victories * 100 / numberOfGames);
 
       var alpha = 0.05;
-      users[key].winrateErrorUp = Math.round(100*(1 - jStat.beta.inv(alpha/2, numberOfGames - users[key].beaten, users[key].beaten + 1)));
-      users[key].winrateErrorDown = Math.round(100*(1 - jStat.beta.inv(1 - alpha/2, numberOfGames - users[key].beaten + 1, users[key].beaten)));
+      users[key].winrateErrorUp = Math.round(100*(1 - jStat.beta.inv(alpha/2, numberOfGames - victories, victories + 1)));
+      users[key].winrateErrorDown = Math.round(100*(1 - jStat.beta.inv(1 - alpha/2, numberOfGames - victories + 1, victories)));
       users[key].winrateErrorRange = users[key].winrateErrorUp - users[key].winrateErrorDown;
     }
   }
