@@ -23,9 +23,19 @@ angular.module('cgstats', ['ui.router'])
   });
 })
 
-.controller('form', function($scope, $state, $rootScope) {
+.controller('form', function($scope, $http, $state, $rootScope) {
   $scope.player = '';
   $scope.game = '';
+
+  $scope.multiList = [];
+  $scope.contestList = [];
+
+  $http.get(url + '/multi-list?contest=true').then(function (response) {
+    $scope.contestList = response.data;
+  });
+  $http.get(url + '/multi-list?contest=false').then(function (response) {
+    $scope.multiList = response.data;
+  });
 
   $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams) {
     if (toState.name == 'app.stats') {
