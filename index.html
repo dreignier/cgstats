@@ -25,54 +25,16 @@
                 <select class="form-control" ng-model="game" required>
                   <option value="">-- Select a game --</option>
                   <optgroup label="Multiplayer puzzles">
-                    <option value="multi-legends-of-code-magic">Legends of Code and Magic</option>
-                    <option value="multi-code-royale">Code Royale</option>
-                    <option value="multi-botters-of-the-galaxy">Botters of the Galaxy</option>
-                    <option value="multi-tic-tac-toe">Ultimate Tic-Tac-Toe</option>
-                    <option value="multi-code4life">Code4Life</option>
-                    <option value="multi-mean-max">Mean Max</option>
-                    <option value="multi-wondev-woman">Wondev Woman</option>
-                    <option value="multi-coders-of-the-caribbean">Coders of the Caribbean</option>
-                    <option value="multi-ghost-in-the-cell">Ghost in the Cell</option>
-                    <option value="multi-fantastic-bits">Fantastic Bits</option>
-                    <option value="multi-hypersonic">Hypersonic</option>
-                    <option value="multi-codebusters">CodeBusters</option>
-                    <option value="multi-smash-the-code">Smash The Code</option>
-                    <option value="multi-coders-strike-back">Coders Strike Back</option>
-                    <option value="multi-back-to-the-code">Back to the Code</option>
-                    <option value="multi-great-escape">The great escape</option>
-                    <option value="multi-platinum-rift2">Platinum rift 2</option>
-                    <option value="multi-platinum-rift">Platinum rift</option>
-                    <option value="multi-poker-chip-race">Poker chip race</option>
-                    <option value="multi-game-of-drone">Game of drones</option>
-                    <option value="multi-tron-battle">Tron battle</option>
+                    <option ng-repeat='multi in multiList' value="multi-{{multi.id}}">{{multi.name}}</option>
                   </optgroup>
                   <optgroup label="Contests">
-                    <option value="xmas-rush">Xmas Rush</option>
-                    <option value="legends-of-code-and-magic-marathon">Legends of Code and Magic</option>
+                    <option ng-repeat='contest in contestList' value="{{contest.id}}">{{contest.name}}</option>
+                  </optgroup>
+                  <optgroup label="Semi-private contests">
                     <option value="amadeus-challenge">Amadeus challenge</option>
-                    <option value="code-of-kutulu">Code of Kutulu</option>
                     <option value="thales-2018">Thales 2018</option>
-                    <option value="code-royale">Code Royale</option>
-                    <option value="botters-of-the-galaxy">Botters of the Galaxy</option>
-                    <option value="mean-max">Mean Max</option>
-                    <option value="wondev-woman">Wondev Woman</option>
-                    <option value="code4life">Code4Life</option>
-                    <option value="coders-of-the-caribbean">Coders of the Caribbean</option>
-                    <option value="ghost-in-the-cell">Ghost in the Cell</option>
-                    <option value="fantastic-bits">Fantastic Bits</option>
-                    <option value="hypersonic">Hypersonic</option>
-                    <option value="codebusters">CodeBusters</option>
-                    <option value="smash-the-code">Smash the Code</option>
-                    <option value="coders-strike-back">Coders Strike Back</option>
+                    <option value="hackathlon">Hackathlon</option>
                     <option value="sf2442">San Francisco 2442</option>
-                    <option value="back-to-the-code">Back to the code</option>
-                    <option value="the-great-escape">The great escape</option>
-                    <option value="platinum-rift-2">Platinum rift 2</option>
-                    <option value="platinum-rift">Platinum rift</option>
-                    <option value="winamax">Poker chip race</option>
-                    <option value="parrot">Game of drones</option>
-                    <option value="20">Tron battle</option>
                   </optgroup>
                   <optgroup label="Code golf puzzles">
                     <option value="thor-codesize">Le pouvoir de thor</option>

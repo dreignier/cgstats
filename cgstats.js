@@ -20,12 +20,48 @@ var express = require('express'),
 
 // ****************************
 
-var games = ["xmas-rush", "multi-legends-of-code-magic", "legends-of-code-and-magic-marathon","amadeus-challenge", "code-of-kutulu", "thales-2018", "multi-code-royale", "code-royale", "multi-tic-tac-toe", "multi-botters-of-the-galaxy", "botters-of-the-galaxy", "multi-code4life", "multi-mean-max", "mean-max", "multi-wondev-woman", "wondev-woman", "multi-coders-of-the-caribbean", "code4life", "coders-of-the-caribbean", "multi-ghost-in-the-cell", "ghost-in-the-cell", "multi-fantastic-bits", "fantastic-bits", "multi-hypersonic", "multi-codebusters", "multi-smash-the-code", "multi-coders-strike-back", "multi-back-to-the-code", "multi-great-escape", "multi-platinum-rift2", "multi-platinum-rift", "multi-poker-chip-race", "multi-game-of-drone", "multi-tron-battle", "hypersonic", "codebusters", "smash-the-code", "coders-strike-back", "sf2442", "back-to-the-code", "the-great-escape", "platinum-rift-2", "platinum-rift", "winamax", "parrot", "20"];
 var optimizations = ["thor-codesize", "paranoid-codesize", "temperatures-codesize"];
 
 // *****************************
 
 var app = express();
+
+app.get('/multi-list', function (req, res) {
+
+  var isContest = req.query.contest == 'true';
+
+  request({
+    url: isContest ? 'https://www.codingame.com/services/ChallengeRemoteService/findAllChallenges' : 'https://www.codingame.com/services/LeaderboardsRemoteService/findAllPuzzleLeaderboards',
+    method: 'POST',
+    json: true,
+    body: []
+  }, function (error, response, body) {
+
+    if (error) {
+      console.error(error);
+      res.status(500).end();
+      return;
+    }
+
+    if (!body || !body.success) {
+      console.error('No success in body 1', body);
+      res.status(500).end();
+      return;
+    }
+
+    res.type('json').set({
+      'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
+    }).send(JSON.stringify(body.success
+      .filter(c => c.level == "multi" || c.type == "BATTLE")
+      .sort((a, b) => (b.creationTime || b.date) - (a.creationTime || a.date))
+      .map(function (c) {
+        return {
+          name: c.title,
+          id: c.publicId
+        }
+      }))).end();
+  })
+});
 
 app.get('/search*', function(req, res) {
 
@@ -33,12 +69,47 @@ app.get('/search*', function(req, res) {
       player = req.query.player
       countDraws = req.query.countDraws;
 
-  if (!game || !player || (games.indexOf(game) == -1 && optimizations.indexOf(game) == -1)) {
+  if (!game || !player) {
     res.status(400).end();
     return;
   }
 
-  if (games.indexOf(game) != -1) {
+  if (optimizations.indexOf(game) != -1) {
+    getStats('LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
+      [game, , , {"active" : true, "column" : "keyword", "filter" : player}])
+      .then(function (response) {
+        var requests = response.users
+          .filter(function(rank) {
+            return (rank.pseudo || '').toLowerCase() == player.toLowerCase();
+          })
+          .map(function(rank) {
+            return getStats('LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
+              [game, , , {"active" : true, "column" : "SLANGUAGE", "filter" : rank.programmingLanguage}]);
+          });
+        Promise.all(requests)
+          .then(function(responses) {
+            var users = responses.map(function(response) {
+              return response.users;
+            });
+            return {users: users, programmingLanguages: response.programmingLanguages};
+          })
+          .then(function(response) {
+            res.type('json').set({
+              'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
+            }).send(JSON.stringify({
+              player : player,
+              stats : compileOptimizationStats(response, player),
+              mode : 'optim'
+            })).end();
+          })
+          .catch(function(error) {
+            res.status(500).end();
+          });
+      })
+      .catch(function(error) {
+        res.status(500).end();
+      });
+  } else {
     var api = game.substring(0, 6) == 'multi-' ? 'getFilteredPuzzleLeaderboard' : 'getFilteredChallengeLeaderboard';
 
     game = game.replace('multi-', '');
@@ -117,41 +188,6 @@ app.get('/search*', function(req, res) {
           })).end();
       });
     });
-  } else if (optimizations.indexOf(game) != -1) {
-    getStats('LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
-      [game, , , {"active" : true, "column" : "keyword", "filter" : player}])
-      .then(function (response) {
-        var requests = response.users
-          .filter(function(rank) {
-            return (rank.pseudo || '').toLowerCase() == player.toLowerCase();
-          })
-          .map(function(rank) {
-            return getStats('LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
-              [game, , , {"active" : true, "column" : "SLANGUAGE", "filter" : rank.programmingLanguage}]);
-          });
-        Promise.all(requests)
-          .then(function(responses) {
-            var users = responses.map(function(response) {
-              return response.users;
-            });
-            return {users: users, programmingLanguages: response.programmingLanguages};
-          })
-          .then(function(response) {
-            res.type('json').set({
-              'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
-            }).send(JSON.stringify({
-              player : player,
-              stats : compileOptimizationStats(response, player),
-              mode : 'optim'
-            })).end();
-          })
-          .catch(function(error) {
-            res.status(500).end();
-          });
-      })
-      .catch(function(error) {
-        res.status(500).end();
-      });
   }
 });
 
