@@ -84,7 +84,7 @@ app.get('/search*', function(req, res) {
           })
           .map(function(rank) {
             return getStats('LeaderboardsRemoteService/getFilteredPuzzleLeaderboard',
-              [game, , , {"active" : true, "column" : "SLANGUAGE", "filter" : rank.programmingLanguage}]);
+              [game, , , {"active" : true, "column" : "LANGUAGE", "filter" : rank.programmingLanguage}]);
           });
         Promise.all(requests)
           .then(function(responses) {
