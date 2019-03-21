@@ -20,7 +20,7 @@ var express = require('express'),
 
 // ****************************
 
-var optimizations = ["thor-codesize", "paranoid-codesize", "temperatures-codesize"];
+var optimizations = ["thor-codesize", "paranoid-codesize", "temperatures-codesize", "chuck-norris-codesize"];
 
 // *****************************
 
