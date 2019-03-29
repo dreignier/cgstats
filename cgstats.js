@@ -28,10 +28,56 @@ var app = express();
 
 app.get('/multi-list', function (req, res) {
 
-  var isContest = req.query.contest == 'true';
+  // First get the global puzzle list
+  request({
+    url: 'https://www.codingame.com/services/PuzzleRemoteService/findAllMinimalProgress',
+    method: 'POST',
+    json: true,
+    body: [null]
+  }, function (error, response, body) {
+
+    if (error || !body || !body.success) {
+      console.error('Error while retrieving multi IDs', body);
+      res.status(500).end();
+      return;
+    }
+
+    var multiIds = body.success
+      .filter(e => e.level === "multi")
+      .map(e => e.id);
+
+    // Then get the details on every multi
+    request({
+      url: 'https://www.codingame.com/services/PuzzleRemoteService/findProgressByIds',
+      method: 'POST',
+      json: true,
+      body: [multiIds, null, 1]
+    }, function (error, response, body) {
+
+      if (error || !body || !body.success) {
+        console.error('Error while retrieving multi details', body);
+        res.status(500).end();
+        return;
+      }
+
+      res.type('json').set({
+        'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
+      }).send(JSON.stringify(body.success
+        .sort((a, b) => (b.creationTime || b.date) - (a.creationTime || a.date))
+        .map(function (c) {
+          return {
+            name: c.title,
+            id: c.puzzleLeaderboardId
+          }
+        }))).end();
+    });
+  })
+});
+
+app.get('/contest-list', function (req, res) {
 
   request({
-    url: isContest ? 'https://www.codingame.com/services/ChallengeRemoteService/findAllChallenges' : 'https://www.codingame.com/services/LeaderboardsRemoteService/findAllPuzzleLeaderboards',
+    url: 'https://www.codingame.com/services/ChallengeRemoteService/findAllChallenges',
     method: 'POST',
     json: true,
     body: []

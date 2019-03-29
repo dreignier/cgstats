@@ -30,10 +30,10 @@ angular.module('cgstats', ['ui.router'])
   $scope.multiList = [];
   $scope.contestList = [];
 
-  $http.get(url + '/multi-list?contest=true').then(function (response) {
+  $http.get(url + '/contest-list').then(function (response) {
     $scope.contestList = response.data;
   });
-  $http.get(url + '/multi-list?contest=false').then(function (response) {
+  $http.get(url + '/multi-list').then(function (response) {
     $scope.multiList = response.data;
   });
 
