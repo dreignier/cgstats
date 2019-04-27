@@ -159,6 +159,9 @@
             <div ng-if="line.codingamer.avatar" class="avatar">
               <img ng-src="https://static.codingame.com/servlet/fileservlet?id={{ line.codingamer.avatar }}&format=navigation_avatar" />
             </div>
+            <div ng-if="line.isBoss" class="avatar">
+              <img ng-src="https://static.codingame.com/assets/league_boss_wood.1a96cb17.png" />
+            </div>
             <a ui-sref="app.stats({ game: game, player: line.pseudo })">{{ line.pseudo }}</a>
           </td>
           <td>

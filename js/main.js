@@ -61,14 +61,13 @@ angular.module('cgstats', ['ui.router'])
   $scope.loading = true;
 
   $http.get(url + '/search?game=' + encodeURIComponent($stateParams.game.trim()) + '&player=' + encodeURIComponent($stateParams.player.trim()) + ($stateParams.countDraws ? ('&countDraws=' + $stateParams.countDraws) : ''))
-
   .then(function (response) {
 
     $scope.fail = false;
     $scope.date = moment().format('HH:mm:ss');
 
-    $scope.sortType = 'rank';
-    $scope.sortReverse = false;
+    $scope.sortType = 'scoreKey';
+    $scope.sortReverse = true;
 
     $scope.player = response.data.player;
     $scope.stats = response.data.stats.stats || response.data.stats;
