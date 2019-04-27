@@ -26,6 +26,8 @@ var optimizations = ["thor-codesize", "paranoid-codesize", "temperatures-codesiz
 
 var app = express();
 
+// *****************************
+
 app.get('/multi-list', function (req, res) {
 
   // First get the global puzzle list
@@ -225,13 +227,30 @@ app.get('/search*', function(req, res) {
             return;
           }
 
-          res.type('json').set({
-            'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
-          }).send(JSON.stringify({
-            player : user,
-            stats : compileStats(body.success, user.codingamer.userId, users, countDraws),
-            mode : 'multi'
-          })).end();
+          var bossGameId = -1;
+          for (var i in body.success) {
+            if (bossGameId != -1) break;
+            var result = body.success[i];
+
+            if (result.done && result.players.length >= 2) {
+              for (var key in result.players) {
+                if (result.players[key].userId == 0) {
+                  bossGameId = result.gameId;
+                  break;
+                }
+              }
+            }
+          }
+
+          addBossInUsers(users, bossGameId).then(r => {
+            res.type('json').set({
+              'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
+            }).send(JSON.stringify({
+              player : user,
+              stats : compileStats(body.success, user.codingamer.userId, users, countDraws),
+              mode : 'multi'
+            })).end();
+          });
       });
     });
   }
@@ -262,6 +281,51 @@ function getStats(resource, parameters) {
       }
 
       resolve(body.success);
+    });
+  });
+}
+
+function addBossInUsers(users, gameId) {
+  return new Promise(function (resolve, reject) {
+    if (gameId == -1) resolve();
+    request({
+      url: 'https://www.codingame.com/services/gameResultRemoteService/findByGameId',
+      method: 'POST',
+      json: true,
+      body: [gameId, null]
+    }, function (error, response, body) {
+  
+      if (error) { reject(); }
+      if (!body || !body.success) { reject("invalid response from server"); }
+  
+      var bossAgent = null;
+      for (var key in body.success.agents) {
+        if (body.success.agents[key].hasOwnProperty('arenaboss')) {
+          bossAgent = body.success.agents[key];
+          break;
+        }
+      }
+  
+      if (bossAgent == null) {
+        reject("cannot find boss data !");
+      }
+  
+      users[0] = {
+        isBoss : true,
+        league : bossAgent.arenaboss.league,
+        score : +bossAgent.score.toFixed(2),
+        pseudo : bossAgent.arenaboss.nickname,
+        draw : 0,
+        lose : 0,
+        beaten : 0,
+        total : 0,
+        winrate : 0,
+        winrateErrorUp : 0,
+        winrateErrorDown : 0,
+        winrateErrorRange : 0
+      }
+  
+      resolve();
     });
   });
 }
@@ -364,9 +428,14 @@ function compileStats(data, myIdentifier, users, countDraws) {
 
   users[myIdentifier].highlight = true;
 
+  var usersArray = _.values(users);
+  for (user of usersArray) {
+    user.scoreKey = user.score + user.league.divisionIndex * 100;
+  }
+
   var result = {
     stats: stats,
-    users: _.values(users)
+    users: usersArray
   };
 
   return result;
