@@ -287,7 +287,10 @@ function getStats(resource, parameters) {
 
 function addBossInUsers(users, gameId) {
   return new Promise(function (resolve, reject) {
-    if (gameId == -1) resolve();
+    if (gameId == -1) {
+      resolve();
+      return;
+    }
     request({
       url: 'https://www.codingame.com/services/gameResultRemoteService/findByGameId',
       method: 'POST',
@@ -295,8 +298,14 @@ function addBossInUsers(users, gameId) {
       body: [gameId, null]
     }, function (error, response, body) {
   
-      if (error) { reject(); }
-      if (!body || !body.success) { reject("invalid response from server"); }
+      if (error) { 
+        reject();
+        return;
+      }
+      if (!body || !body.success) { 
+        reject("invalid response from server"); 
+        return;
+      }
   
       var bossAgent = null;
       for (var key in body.success.agents) {
@@ -308,6 +317,7 @@ function addBossInUsers(users, gameId) {
   
       if (bossAgent == null) {
         reject("cannot find boss data !");
+        return;
       }
   
       users[0] = {
