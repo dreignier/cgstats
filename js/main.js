@@ -3,14 +3,15 @@ var url = location.port === '8888' ? '/proxy' : 'http://cgstats.proxy.magusgeek.
 angular.module('cgstats', ['ui.router'])
 
 .config(function($stateProvider, $urlRouterProvider, $locationProvider) {
-  $locationProvider.html5Mode(true)
+  $locationProvider.html5Mode(true);
   $urlRouterProvider.otherwise('/app');
 
   $stateProvider
 
   .state('app', {
     url: '/app',
-    template: '<ui-view></ui-view>'
+    template: '<ui-view></ui-view>',
+    controller: 'app'
   })
 
   .state('app.stats', {
@@ -21,6 +22,24 @@ angular.module('cgstats', ['ui.router'])
       countDraws: null
     }
   });
+})
+
+.controller('app', function($state) {
+  if ($state.current.name === 'app' && window.localStorage && angular.isObject(localStorage) && angular.isFunction(localStorage.getItem)) {
+    var game = localStorage.getItem('game') || '',
+        player = localStorage.getItem('player') || '',
+        countDraws = localStorage.getItem('countDraws') === 'true';
+
+    if (game.trim() && player.trim()) {
+      $state.go('app.stats', {
+        game: game,
+        player: player,
+        countDraws: countDraws
+      }, {
+        reload: true
+      });
+    }
+  }
 })
 
 .controller('form', function($scope, $http, $state, $rootScope) {
@@ -41,6 +60,7 @@ angular.module('cgstats', ['ui.router'])
     if (toState.name == 'app.stats') {
       $scope.player = toParams.player;
       $scope.game = toParams.game;
+      $scope.countDraws = toParams.countDraws;
     }
   });
 
@@ -59,6 +79,12 @@ angular.module('cgstats', ['ui.router'])
 
 .controller('list', function($scope, $http, $stateParams, $timeout) {
   $scope.loading = true;
+
+  if (window.localStorage && angular.isObject(localStorage) && angular.isFunction(localStorage.setItem)) {
+    localStorage.setItem('game', $stateParams.game);
+    localStorage.setItem('player', $stateParams.player);
+    localStorage.setItem('countDraws', $stateParams.countDraws);
+  }
 
   $http.get(url + '/search?game=' + encodeURIComponent($stateParams.game.trim()) + '&player=' + encodeURIComponent($stateParams.player.trim()) + ($stateParams.countDraws ? ('&countDraws=' + $stateParams.countDraws) : ''))
   .then(function (response) {
