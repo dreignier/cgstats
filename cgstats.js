@@ -16,7 +16,8 @@
 var express = require('express'),
     request = require('request'),
     _ = require('underscore'),
-    jStat = require('jStat').jStat;
+    jStat = require('jStat').jStat,
+    fs = require('fs');
 
 // ****************************
 
@@ -24,11 +25,29 @@ var optimizations = ["thor-codesize", "paranoid-codesize", "temperatures-codesiz
 
 // *****************************
 
+// Create the cache directory
+
+if (!fs.existsSync('cache')) {
+  fs.mkdirSync('cache');
+}
+
 var app = express();
 
 // *****************************
 
 app.get('/multi-list', function (req, res) {
+  // Try to get the cache
+  if (fs.existsSync('cache/multi-list.json')) {
+    var cache = JSON.parse(fs.readFileSync('cache/multi-list.json', 'utf8'));
+
+    if (new Date().getTime() - cache.timestamp < 1000 * 60 * 60 * 24) {
+      res.type('json').set({
+        'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
+      }).send(JSON.stringify(cache.result)).end();
+
+      return;
+    }
+  }
 
   // First get the global puzzle list
   request({
@@ -62,21 +81,43 @@ app.get('/multi-list', function (req, res) {
         return;
       }
 
-      res.type('json').set({
-        'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
-      }).send(JSON.stringify(body.success
+      var result = body.success
         .sort((a, b) => (b.creationTime || b.date) - (a.creationTime || a.date))
         .map(function (c) {
           return {
             name: c.title,
             id: c.puzzleLeaderboardId
           }
-        }))).end();
+        });
+
+      // Cache the result
+      var cache = {
+        result: result,
+        timestamp: new Date().getTime()
+      };
+
+      fs.writeFileSync('cache/multi-list.json', JSON.stringify(cache));
+
+      res.type('json').set({
+        'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
+      }).send(JSON.stringify(result)).end();
     });
   })
 });
 
 app.get('/contest-list', function (req, res) {
+  // Try to get the cache
+  if (fs.existsSync('cache/contest-list.json')) {
+    var cache = JSON.parse(fs.readFileSync('cache/contest-list.json', 'utf8'));
+
+    if (new Date().getTime() - cache.timestamp < 1000 * 60 * 60 * 24) {
+      res.type('json').set({
+        'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
+      }).send(JSON.stringify(cache.result)).end();
+
+      return;
+    }
+  }
 
   request({
     url: 'https://www.codingame.com/services/ChallengeRemoteService/findAllChallenges',
@@ -97,9 +138,7 @@ app.get('/contest-list', function (req, res) {
       return;
     }
 
-    res.type('json').set({
-      'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
-    }).send(JSON.stringify(body.success
+    var result = body.success
       .filter(c => c.level == "multi" || c.type == "BATTLE")
       .sort((a, b) => (b.creationTime || b.date) - (a.creationTime || a.date))
       .map(function (c) {
@@ -107,7 +146,19 @@ app.get('/contest-list', function (req, res) {
           name: c.title,
           id: c.publicId
         }
-      }))).end();
+      });
+
+    // Cache the result
+    var cache = {
+      result: result,
+      timestamp: new Date().getTime()
+    };
+
+    fs.writeFileSync('cache/contest-list.json', JSON.stringify(cache));
+
+    res.type('json').set({
+      'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
+    }).send(JSON.stringify(result)).end();
   })
 });
 
@@ -297,16 +348,16 @@ function addBossInUsers(users, gameId) {
       json: true,
       body: [gameId, null]
     }, function (error, response, body) {
-  
-      if (error) { 
+
+      if (error) {
         reject();
         return;
       }
-      if (!body || !body.success) { 
-        reject("invalid response from server"); 
+      if (!body || !body.success) {
+        reject("invalid response from server");
         return;
       }
-  
+
       var bossAgent = null;
       for (var key in body.success.agents) {
         if (body.success.agents[key].hasOwnProperty('arenaboss')) {
@@ -314,12 +365,12 @@ function addBossInUsers(users, gameId) {
           break;
         }
       }
-  
+
       if (bossAgent == null) {
         reject("cannot find boss data !");
         return;
       }
-  
+
       users[0] = {
         isBoss : true,
         league : bossAgent.arenaboss.league,
@@ -334,7 +385,7 @@ function addBossInUsers(users, gameId) {
         winrateErrorDown : 0,
         winrateErrorRange : 0
       }
-  
+
       resolve();
     });
   });
