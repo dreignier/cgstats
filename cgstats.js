@@ -491,7 +491,7 @@ function compileStats(data, myIdentifier, users, countDraws) {
 
   var usersArray = _.values(users);
   for (user of usersArray) {
-    user.scoreKey = user.score + user.league.divisionIndex * 100;
+    user.scoreKey = user.score + (user.league ? user.league.divisionIndex * 100 : 0);
   }
 
   var result = {
