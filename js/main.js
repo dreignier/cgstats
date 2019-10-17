@@ -1,5 +1,12 @@
 var url = location.port === '8888' ? '/proxy' : 'http://cgstats.proxy.magusgeek.com';
 
+moment.updateLocale('en', {
+  longDateFormat : {
+      LT: "HH:mm",
+      L: "DD/MM/YYYY"
+  }
+});
+
 angular.module('cgstats', ['ui.router'])
 
 .config(function($stateProvider, $urlRouterProvider, $locationProvider) {
