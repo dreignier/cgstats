@@ -9,8 +9,6 @@
 //   je ne sais pas
 //   "global"
 
-
-
 // https://www.codingame.com/services/LeaderboardsRemoteService/getChallengeLeaderboard
 
 var express = require('express'),
@@ -57,13 +55,13 @@ app.get('/multi-list', function (req, res) {
     body: [null]
   }, function (error, response, body) {
 
-    if (error || !body || !body.success) {
+    if (error || !body) {
       console.error('Error while retrieving multi IDs', body);
       res.status(500).end();
       return;
     }
 
-    var multiIds = body.success
+    var multiIds = body
       .filter(e => e.level === "multi")
       .map(e => e.id);
 
@@ -75,13 +73,13 @@ app.get('/multi-list', function (req, res) {
       body: [multiIds, null, 1]
     }, function (error, response, body) {
 
-      if (error || !body || !body.success) {
+      if (error || !body || !body) {
         console.error('Error while retrieving multi details', body);
         res.status(500).end();
         return;
       }
 
-      var result = body.success
+      var result = body
         .sort((a, b) => (b.creationTime || b.date) - (a.creationTime || a.date))
         .map(function (c) {
           return {
@@ -132,13 +130,13 @@ app.get('/contest-list', function (req, res) {
       return;
     }
 
-    if (!body || !body.success) {
-      console.error('No success in body 1', body);
+    if (!body) {
+      console.error('No body 1', body);
       res.status(500).end();
       return;
     }
 
-    var result = body.success
+    var result = body
       .filter(c => c.level == "multi" || c.type == "BATTLE")
       .sort((a, b) => (b.creationTime || b.date) - (a.creationTime || a.date))
       .map(function (c) {
@@ -227,8 +225,8 @@ app.get('/search*', function(req, res) {
         return;
       }
 
-      if (!body || !body.success) {
-        console.error('No success in body 1', body);
+      if (!body) {
+        console.error('No body 2', body);
         res.status(500).end();
         return;
       }
@@ -238,18 +236,18 @@ app.get('/search*', function(req, res) {
           users = {}; // only close users are considered (-10 +10)
 
       var userIdx = -1;
-      for (var i = 0; i < body.success.users.length; ++i) {
-        if (!user && body.success.users[i].pseudo && body.success.users[i].pseudo.toLowerCase() == player.toLowerCase()) {
-          user = body.success.users[i];
+      for (var i = 0; i < body.users.length; ++i) {
+        if (!user && body.users[i].pseudo && body.users[i].pseudo.toLowerCase() == player.toLowerCase()) {
+          user = body.users[i];
           userIdx = i;
           break;
         }
       }
 
-      for (var i = Math.max(0, userIdx - 20); i <= userIdx + 20 && i < body.success.users.length; i++) {
+      for (var i = Math.max(0, userIdx - 20); i <= userIdx + 20 && i < body.users.length; i++) {
         // in 'classic' mode, players are indexed by their userId
-        if (body.success.users[i].codingamer && body.success.users[i].codingamer.userId) {
-          users[body.success.users[i].codingamer.userId] = body.success.users[i];
+        if (body.users[i].codingamer && body.users[i].codingamer.userId) {
+          users[body.users[i].codingamer.userId] = body.users[i];
         }
       }
 
@@ -272,16 +270,16 @@ app.get('/search*', function(req, res) {
             return;
           }
 
-          if (!body || !body.success) {
-            console.error('No success in body 2', body);
+          if (!body) {
+            console.error('No body 3', body);
             res.status(500).end();
             return;
           }
 
           var bossGameId = -1;
-          for (var i in body.success) {
+          for (var i in body) {
             if (bossGameId != -1) break;
-            var result = body.success[i];
+            var result = body[i];
 
             if (result.done && result.players.length >= 2) {
               for (var key in result.players) {
@@ -298,7 +296,7 @@ app.get('/search*', function(req, res) {
               'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
             }).send(JSON.stringify({
               player : user,
-              stats : compileStats(body.success, user.codingamer.userId, users, countDraws),
+              stats : compileStats(body, user.codingamer.userId, users, countDraws),
               mode : 'multi'
             })).end();
           });
@@ -326,12 +324,12 @@ function getStats(resource, parameters) {
         return;
       }
 
-      if (!body || !body.success) {
-        console.error('No success in body', body);
-        reject(new Error('No success in body'));
+      if (!body) {
+        console.error('No body', body);
+        reject(new Error('No body'));
       }
 
-      resolve(body.success);
+      resolve(body);
     });
   });
 }
@@ -353,15 +351,15 @@ function addBossInUsers(users, gameId) {
         reject();
         return;
       }
-      if (!body || !body.success) {
+      if (!body) {
         reject("invalid response from server");
         return;
       }
 
       var bossAgent = null;
-      for (var key in body.success.agents) {
-        if (body.success.agents[key].hasOwnProperty('arenaboss')) {
-          bossAgent = body.success.agents[key];
+      for (var key in body.agents) {
+        if (body.agents[key].hasOwnProperty('arenaboss')) {
+          bossAgent = body.agents[key];
           break;
         }
       }
