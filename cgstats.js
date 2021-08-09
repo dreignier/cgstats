@@ -509,6 +509,11 @@ function compileOptimizationStats(data, player) {
     });
     if (index === -1) return;
 
+    // In optims and golfs, players with the same score are considered equal and get the same number of CPs
+    while (index > 0 && ranks[index - 1].criteriaScore === ranks[index].criteriaScore) {
+        index--;
+    }
+
     var language = ranks[0].programmingLanguage;
     var total = data.programmingLanguages[language];
 
