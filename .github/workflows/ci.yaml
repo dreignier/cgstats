@@ -44,10 +44,8 @@ jobs:
 
       - name: Build and Push Container
         run: |-
-          cd ${{ inputs.project }}
           docker build . --file Dockerfile --tag cgstats
           docker push cgstats
-
 
       - name: Gcloud run deploy
         run: |-
