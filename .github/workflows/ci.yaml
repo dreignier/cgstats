@@ -9,6 +9,8 @@ jobs:
   deploy:
     runs-on:
       ubuntu-latest
+    env:
+      IMAGE_NAME: europe-west1-docker.pkg.dev/magusgeek/docker/cgstats:${{ github.sha }}
 
     steps:
       - name: Checkout code
@@ -44,13 +46,13 @@ jobs:
 
       - name: Build and Push Container
         run: |-
-          docker build . --file Dockerfile --tag cgstats
-          docker push cgstats
+          docker build . --file Dockerfile --tag $IMAGE_NAME
+          docker push $IMAGE_NAME
 
       - name: Gcloud run deploy
         run: |-
           gcloud run deploy cgstats \
-          --image=cgstats \
+          --image=${{ env.IMAGE_NAME }} \
           --region=europe-west1 \
           --service-account=service-account \
           --allow-unauthenticated \
