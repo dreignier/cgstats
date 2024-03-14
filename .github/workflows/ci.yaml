@@ -19,57 +19,57 @@ jobs:
         with:
           node-version: 12
 
-    - name: Authenticate to google Cloud
-      id: auth
-      uses: google-github-actions/auth@v1
-      with:
-        export_environment_variables: true
-        create_credentials_file: true
-        credentials_json: ${{ secrets.GCP_API_KEY }}
+      - name: Authenticate to google Cloud
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          export_environment_variables: true
+          create_credentials_file: true
+          credentials_json: ${{ secrets.GCP_API_KEY }}
 
-    - name: Setup gcloud
-      id: setup-gcloud
-      uses: google-github-actions/setup-gcloud@v0.2.0
-      with:
-        project_id: magusgeek
-        service_account_key: ${{ secrets.GCP_API_KEY }}
-        export_default_credentials: true
+      - name: Setup gcloud
+        id: setup-gcloud
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          project_id: magusgeek
+          service_account_key: ${{ secrets.GCP_API_KEY }}
+          export_default_credentials: true
 
-    - name: Docker auth
-      id: docker-auth
-      run: |-
-        echo ${{ secrets.GCP_API_KEY }} | base64 --decode > /tmp/key.json
-        gcloud auth activate-service-account --key-file=/tmp/key.json
-        gcloud auth configure-docker europe-west1-docker.pkg.dev
+      - name: Docker auth
+        id: docker-auth
+        run: |-
+          echo ${{ secrets.GCP_API_KEY }} | base64 --decode > /tmp/key.json
+          gcloud auth activate-service-account --key-file=/tmp/key.json
+          gcloud auth configure-docker europe-west1-docker.pkg.dev
 
-    - name: Build and Push Container
-      run: |-
-        cd ${{ inputs.project }}
-        docker build . --file Dockerfile --tag cgstats
-        docker push cgstats
+      - name: Build and Push Container
+        run: |-
+          cd ${{ inputs.project }}
+          docker build . --file Dockerfile --tag cgstats
+          docker push cgstats
 
 
-    - name: Gcloud run deploy
-      run: |-
-        gcloud run deploy cgstats \
-        --image=cgstats \
-        --region=europe-west1 \
-        --service-account=service-account \
-        --allow-unauthenticated \
-        --port=9888 \
-        --vpc-connector=cgstats \
-        --vpc-egress=all-traffic
+      - name: Gcloud run deploy
+        run: |-
+          gcloud run deploy cgstats \
+          --image=cgstats \
+          --region=europe-west1 \
+          --service-account=service-account \
+          --allow-unauthenticated \
+          --port=9888 \
+          --vpc-connector=cgstats \
+          --vpc-egress=all-traffic
 
-    - name: Gcloud run update traffic
-      run: |-
-        gcloud run services update-traffic cgstats \
-        --to-latest \
-        --region=europe-west1
+      - name: Gcloud run update traffic
+        run: |-
+          gcloud run services update-traffic cgstats \
+          --to-latest \
+          --region=europe-west1
 
-    - name: Gcloud run delete revisions
-      run: |-
-        REVISIONS=$(gcloud run revisions list --region=europe-west1 | sed 's/  */:/g' | cut -f 2 -d : | tail -n +7)
-        for revision in $REVISIONS; do
-          echo "$revision deleted"
-          gcloud run revisions delete $revision --region=europe-west1 -q
-        done
+      - name: Gcloud run delete revisions
+        run: |-
+          REVISIONS=$(gcloud run revisions list --region=europe-west1 | sed 's/  */:/g' | cut -f 2 -d : | tail -n +7)
+          for revision in $REVISIONS; do
+            echo "$revision deleted"
+            gcloud run revisions delete $revision --region=europe-west1 -q
+          done
