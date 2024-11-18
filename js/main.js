@@ -1,4 +1,4 @@
-var url = location.port === '8888' ? '/proxy' : 'http://cgstats.proxy.magusgeek.com';
+var url = location.port === '8888' ? '/proxy' : 'https://cgstats.proxy.magusgeek.com';
 
 moment.updateLocale('en', {
   longDateFormat : {
