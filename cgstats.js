@@ -97,7 +97,7 @@ app.get('/multi-list', function (req, res) {
       fs.writeFileSync('cache/multi-list.json', JSON.stringify(cache));
 
       res.type('json').set({
-        'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
+        'Access-Control-Allow-Origin': 'https://cgstats.magusgeek.com'
       }).send(JSON.stringify(result)).end();
     });
   })
@@ -110,7 +110,7 @@ app.get('/contest-list', function (req, res) {
 
     if (new Date().getTime() - cache.timestamp < 1000 * 60 * 60 * 24) {
       res.type('json').set({
-        'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
+        'Access-Control-Allow-Origin': 'https://cgstats.magusgeek.com'
       }).send(JSON.stringify(cache.result)).end();
 
       return;
@@ -155,7 +155,7 @@ app.get('/contest-list', function (req, res) {
     fs.writeFileSync('cache/contest-list.json', JSON.stringify(cache));
 
     res.type('json').set({
-      'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
+      'Access-Control-Allow-Origin': 'https://cgstats.magusgeek.com'
     }).send(JSON.stringify(result)).end();
   })
 });
@@ -192,7 +192,7 @@ app.get('/search*', function(req, res) {
           })
           .then(function(response) {
             res.type('json').set({
-              'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
+              'Access-Control-Allow-Origin' : 'https://cgstats.magusgeek.com'
             }).send(JSON.stringify({
               player : player,
               stats : compileOptimizationStats(response, player),
@@ -293,7 +293,7 @@ app.get('/search*', function(req, res) {
 
           addBossInUsers(users, bossGameId).then(r => {
             res.type('json').set({
-              'Access-Control-Allow-Origin' : 'http://cgstats.magusgeek.com'
+              'Access-Control-Allow-Origin' : 'https://cgstats.magusgeek.com'
             }).send(JSON.stringify({
               player : user,
               stats : compileStats(body, user.codingamer.userId, users, countDraws),
