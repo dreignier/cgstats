@@ -40,7 +40,7 @@ app.get('/multi-list', function (req, res) {
 
     if (new Date().getTime() - cache.timestamp < 1000 * 60 * 60 * 24) {
       res.type('json').set({
-        'Access-Control-Allow-Origin': 'http://cgstats.magusgeek.com'
+        'Access-Control-Allow-Origin': 'https://cgstats.magusgeek.com'
       }).send(JSON.stringify(cache.result)).end();
 
       return;
