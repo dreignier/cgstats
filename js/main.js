@@ -119,7 +119,8 @@ angular.module('cgstats', ['ui.router'])
         line.submit = line.creationTime || 0;
 
         if (line.submit) {
-          line.submitText = moment(line.submit).calendar();
+          line.submitText = `${moment(line.submit).calendar()}`;
+          line.progressText = line.percentage < 100 ? ` (${line.percentage} %)` : '';
         }
       });
     }

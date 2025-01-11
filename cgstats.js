@@ -244,9 +244,11 @@ app.get('/search*', function(req, res) {
         }
       }
 
+      const divisionIndex = user.league.divisionIndex;
+
       for (var i = Math.max(0, userIdx - 20); i <= userIdx + 20 && i < body.users.length; i++) {
         // in 'classic' mode, players are indexed by their userId
-        if (body.users[i].codingamer && body.users[i].codingamer.userId) {
+        if (body.users[i].codingamer && body.users[i].codingamer.userId && body.users[i].league.divisionIndex === divisionIndex) {
           users[body.users[i].codingamer.userId] = body.users[i];
         }
       }
@@ -283,7 +285,7 @@ app.get('/search*', function(req, res) {
 
             if (result.done && result.players.length >= 2) {
               for (var key in result.players) {
-                if (result.players[key].userId == 0) {
+                if (result.players[key].league) {
                   bossGameId = result.gameId;
                   break;
                 }
@@ -489,7 +491,7 @@ function compileStats(data, myIdentifier, users, countDraws) {
 
   var usersArray = _.values(users);
   for (user of usersArray) {
-    user.scoreKey = user.score + (user.league ? user.league.divisionIndex * 100 : 0);
+    user.scoreKey = (user.league ? user.league.divisionIndex * 10000 : 0) + user.score * 100 - (user.rank || 0);
   }
 
   var result = {
