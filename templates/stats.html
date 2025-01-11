@@ -165,7 +165,7 @@
             <a ui-sref="{{ line.isBoss ? '': 'app.stats({ game: game, player: line.pseudo })'}}">{{ line.pseudo }}</a>
           </td>
           <td>
-            {{ line.score }}
+            {{ line.score }} <span class="last-submit-cell">{{ line.progressText }}</span>
             <span ng-show="line.progress == 'INCREASE'" class="arrow-green"></span>
             <span ng-show="line.progress == 'DECREASE'" class="arrow-red"></span>
           </td>
