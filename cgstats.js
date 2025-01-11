@@ -283,7 +283,7 @@ app.get('/search*', function(req, res) {
 
             if (result.done && result.players.length >= 2) {
               for (var key in result.players) {
-                if (result.players[key].userId == 0) {
+                if (result.players[key].league) {
                   bossGameId = result.gameId;
                   break;
                 }
@@ -489,7 +489,7 @@ function compileStats(data, myIdentifier, users, countDraws) {
 
   var usersArray = _.values(users);
   for (user of usersArray) {
-    user.scoreKey = user.score + (user.league ? user.league.divisionIndex * 100 : 0);
+    user.scoreKey = (user.league ? user.league.divisionIndex * 10000 : 0) + user.score * 100 - (user.rank || 0);
   }
 
   var result = {
