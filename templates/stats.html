@@ -14,7 +14,7 @@
       <thead>
         <tr class="info">
           <th>Pseudo</th>
-          <th>Rank</th>
+          <th>Global rank</th>
           <th>Score</th>
           <th>Language</th>
           <th>Progress</th>
@@ -153,7 +153,7 @@
       <tbody>
         <tr ng-repeat="line in details | orderBy : sortType : sortReverse" ng-class="{ highlight : line.highlight, faded: !line.highlight && line.total < 5 }">
           <td>
-            {{ line.rank }}
+            {{ line.localRank }}
           </td>
           <td>
             <div ng-if="line.codingamer.avatar" class="avatar">

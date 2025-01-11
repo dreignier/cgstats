@@ -244,9 +244,11 @@ app.get('/search*', function(req, res) {
         }
       }
 
+      const divisionIndex = user.league.divisionIndex;
+
       for (var i = Math.max(0, userIdx - 20); i <= userIdx + 20 && i < body.users.length; i++) {
         // in 'classic' mode, players are indexed by their userId
-        if (body.users[i].codingamer && body.users[i].codingamer.userId) {
+        if (body.users[i].codingamer && body.users[i].codingamer.userId && body.users[i].league.divisionIndex === divisionIndex) {
           users[body.users[i].codingamer.userId] = body.users[i];
         }
       }
