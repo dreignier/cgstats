@@ -244,6 +244,11 @@ app.get('/search*', function(req, res) {
         }
       }
 
+      if (!user) {
+        res.status(404).end();
+        return;
+      }
+
       const divisionIndex = user.league.divisionIndex;
 
       for (var i = Math.max(0, userIdx - 20); i <= userIdx + 20 && i < body.users.length; i++) {
@@ -251,11 +256,6 @@ app.get('/search*', function(req, res) {
         if (body.users[i].codingamer && body.users[i].codingamer.userId && body.users[i].league.divisionIndex === divisionIndex) {
           users[body.users[i].codingamer.userId] = body.users[i];
         }
-      }
-
-      if (!user) {
-        res.status(404).end();
-        return;
       }
 
       // Get the games
