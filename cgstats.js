@@ -233,7 +233,7 @@ app.get('/search*', function(req, res) {
 
       // Search for the player
       var user = null,
-          users = {}; // only close users are considered (-10 +10)
+          users = {}; // only close users are considered
 
       var userIdx = -1;
       for (var i = 0; i < body.users.length; ++i) {
@@ -411,7 +411,7 @@ function compileStats(data, myIdentifier, users, countDraws) {
 
       if (result.players.length === 2 && result.players[0].position === result.players[1].position) {
         // It's a draw in a 1v1 game
-        var hisId = result.players[0].userId === myIdentifier ? result.players[1].userId : result.players[0].userId;
+        var hisId = result.players[0].userId === myIdentifier ? (result.players[1].userId || 0) : (result.players[0].userId || 0);
 
         if (users[hisId]) {
           users[hisId].total++;
@@ -423,7 +423,7 @@ function compileStats(data, myIdentifier, users, countDraws) {
 
         for (var i = 0; i < result.players.length; ++i) {
 
-          var hisId = result.players[i].userId;
+          var hisId = result.players[i].userId || 0;
 
           if (hisId == myIdentifier) {
             position = result.players[i].position;
